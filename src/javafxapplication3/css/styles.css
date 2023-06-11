@@ -1,0 +1,36 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 10/06/2023, 09:12:51 PM
+    Author     : jjj
+*/
+
+.h1, .h2, .h3{
+    -fx-font-weight: bold;
+}
+
+.h1{
+    -fx-font-size: 24;
+}
+
+.h2{
+    -fx-font-size: 18;
+}
+
+.h3{
+    -fx-font-size: 14;
+}
+
+GridPane.file{
+    -fx-alignment: TOP_CENTER;
+    -fx-cursor: hand;
+}
+
+Label.file{
+    -fx-wrap-text: true;
+    -fx-alignment: CENTER;
+    -fx-text-alignment: center;
+}
