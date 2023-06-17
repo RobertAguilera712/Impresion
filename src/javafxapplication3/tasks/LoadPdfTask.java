@@ -47,7 +47,7 @@ public class LoadPdfTask extends Task<ObservableList<VBox>> {
        
             iv.fitHeightProperty().bind(windowHeight);
             VBox vbox = new VBox();
-            vbox.setStyle("-fx-background-color: blue");
+            vbox.setStyle("-fx-background-color: #d4d4d7");
             vbox.getChildren().add(iv);
             vbox.setAlignment(Pos.TOP_CENTER);
             pages.add(vbox);

@@ -50,9 +50,9 @@ public class FXMLPdfViewverController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        listView.minWidthProperty().bind(pane.widthProperty());
-        listView.minHeightProperty().bind(pane.heightProperty().subtract(100));
-        listView.maxHeightProperty().bind(pane.heightProperty().subtract(100));
+        listView.minWidthProperty().bind(pane.widthProperty().subtract(listView.layoutXProperty().multiply(2)));
+        listView.minHeightProperty().bind(pane.heightProperty());
+        listView.maxHeightProperty().bind(pane.heightProperty());
     }
 
     public void showPdf() {
