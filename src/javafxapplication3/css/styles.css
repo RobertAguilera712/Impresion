@@ -34,3 +34,8 @@ Label.file{
     -fx-alignment: CENTER;
     -fx-text-alignment: center;
 }
+
+.list-cell {
+    -fx-alignment: center;
+    -fx-background-color: blue;
+}

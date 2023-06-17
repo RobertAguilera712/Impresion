@@ -9,6 +9,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 /**
@@ -20,11 +21,16 @@ public class JavaFXApplication3 extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
-        
+       
         Scene scene = new Scene(root);
         String css = getClass().getResource("css/styles.css").toExternalForm();
         scene.getStylesheets().add(css);
+        
         stage.setScene(scene);
+//        stage.setFullScreen(true);
+//        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//        stage.setFullScreenExitHint("");
+//        stage.setResizable(false);
         stage.show();
     }
 

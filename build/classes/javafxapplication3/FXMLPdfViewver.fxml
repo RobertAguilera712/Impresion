@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLPdfViewverController">
+   <children>
+      <ListView fx:id="listView" layoutX="2.0" layoutY="50.0" />
+      <VBox fx:id="progressVbox" alignment="CENTER" layoutX="250.0" layoutY="89.0">
+         <children>
+            <Label fx:id="progressLabel" text="Label" />
+            <MFXProgressSpinner fx:id="progressSpinner" />
+         </children>
+      </VBox>
+   </children>
+</Pane>
