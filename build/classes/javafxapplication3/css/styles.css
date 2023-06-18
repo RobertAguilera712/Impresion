@@ -35,7 +35,10 @@ Label.file{
     -fx-text-alignment: center;
 }
 
-.list-cell {
-    -fx-alignment: center;
+ListView .list-view .list-cell:odd {
+    -fx-background-color: red;
+}
+
+ListView .list-view .list-cell:even {
     -fx-background-color: blue;
 }

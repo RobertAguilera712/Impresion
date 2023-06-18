@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLPdfViewverController">
    <children>
-      <ListView fx:id="listView" layoutX="20.0" layoutY="50.0" />
+      <ListView fx:id="listView" focusTraversable="false" layoutX="20.0" layoutY="50.0" />
       <VBox fx:id="progressVbox" alignment="CENTER" layoutX="250.0" layoutY="89.0">
          <children>
             <Label fx:id="progressLabel" text="Label" />
             <MFXProgressSpinner fx:id="progressSpinner" />
          </children>
       </VBox>
+      <HBox fx:id="zoomHbox" alignment="CENTER" layoutY="18.0" spacing="8.0">
+         <children>
+            <MFXButton fx:id="zoomOutBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
+               <graphic>
+                  <FontAwesomeIconView glyphName="MINUS" />
+               </graphic>
+            </MFXButton>
+            <Label fx:id="zoomLabel" text="Label" />
+            <MFXButton fx:id="zoomInBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
+               <graphic>
+                  <FontAwesomeIconView glyphName="PLUS" />
+               </graphic>
+            </MFXButton>
+         </children>
+      </HBox>
+      <Label fx:id="pageLabel" layoutX="130.0" layoutY="22.0" text="Label" />
    </children>
 </Pane>

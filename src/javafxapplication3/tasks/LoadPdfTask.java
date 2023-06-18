@@ -7,13 +7,17 @@ package javafxapplication3.tasks;
 
 import java.io.File;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.geometry.Pos;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafxapplication3.models.PdfModel;
 
 /**
@@ -41,13 +45,40 @@ public class LoadPdfTask extends Task<ObservableList<VBox>> {
                 updateMessage("Cancelled");
                 break;
             }
-            System.out.println("PAGE " + i + "Added");
             ImageView iv = new ImageView(model.getImage(i));
             iv.setPreserveRatio(true);
-       
+            iv.setMouseTransparent(true);
             iv.fitHeightProperty().bind(windowHeight);
             VBox vbox = new VBox();
-            vbox.setStyle("-fx-background-color: #d4d4d7");
+            final int index = i;
+            
+            vbox.setStyle("-fx-background-color: white");
+            //Instantiating the Shadow class 
+            DropShadow dropShadow = new DropShadow();
+
+            //setting the type of blur for the shadow 
+            dropShadow.setBlurType(BlurType.GAUSSIAN);
+
+            //Setting color for the shadow 
+            dropShadow.setColor(new Color(0, 0, 0, 0.3));
+
+            //Setting the height of the shadow
+            dropShadow.setHeight(2);
+
+            //Setting the width of the shadow 
+            dropShadow.setWidth(2);
+
+            //Setting the radius of the shadow 
+            dropShadow.setRadius(0.5);
+            //setting the offset of the shadow 
+            dropShadow.setOffsetX(0);
+            dropShadow.setOffsetY(0);
+
+            //Setting the spread of the shadow 
+            dropShadow.setSpread(100);
+
+            iv.setEffect(dropShadow);
+
             vbox.getChildren().add(iv);
             vbox.setAlignment(Pos.TOP_CENTER);
             pages.add(vbox);
