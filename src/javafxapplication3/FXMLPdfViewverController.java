@@ -23,6 +23,7 @@ import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Bounds;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -42,13 +43,13 @@ import javafxapplication3.models.PdfModel;
 import javafxapplication3.tasks.LoadPdfTask;
 
 public class FXMLPdfViewverController implements Initializable {
-
+    
     private File pdf;
     private PdfModel model;
     private int numPages;
     @FXML
     private Pane pane;
-
+    
     @FXML
     private VBox progressVbox;
     @FXML
@@ -57,7 +58,7 @@ public class FXMLPdfViewverController implements Initializable {
     private MFXProgressSpinner progressSpinner;
     @FXML
     private ListView<VBox> listView;
-
+    
     private DoubleProperty pageHeightPropery;
     @FXML
     private MFXButton zoomInBtn;
@@ -72,17 +73,19 @@ public class FXMLPdfViewverController implements Initializable {
     private HBox zoomHbox;
     @FXML
     private Label pageLabel;
-
+    @FXML
+    private Group viewerGroup;
+    
     public void setPdf(File pdf) {
         this.pdf = pdf;
     }
-
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         listView.setSelectionModel(new NoSelectionModel<>());
         listView.minWidthProperty().bind(pane.widthProperty().subtract(listView.layoutXProperty().multiply(2)));
-        listView.minHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()));
-        listView.maxHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()));
+        listView.minHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()).subtract(20));
+        listView.maxHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()).subtract(20));
         listView.setOnZoom((ZoomEvent event) -> {
             pageHeightPropery.set(pageHeightPropery.multiply(event.getZoomFactor()).get());
         });
@@ -95,14 +98,15 @@ public class FXMLPdfViewverController implements Initializable {
         zoomOutBtn.setOnAction((event) -> {
             pageHeightPropery.set(pageHeightPropery.subtract(initZoom * 0.1).get());
         });
+        viewerGroup.visibleProperty().bind(progressVbox.visibleProperty().not());
     }
-
+    
     public void showPdf() {
         LoadPdfTask loadPdfTask = new LoadPdfTask(pdf, pageHeightPropery);
         pageHeightPropery.set(listView.heightProperty().get());
         initZoom = listView.heightProperty().get();
         zoomValue.bind(pageHeightPropery.divide(initZoom).multiply(100));
-
+        
         progressLabel.textProperty().bind(loadPdfTask.messageProperty());
         progressVbox.visibleProperty().bind(loadPdfTask.runningProperty());
         progressSpinner.progressProperty().bind(loadPdfTask.progressProperty());
@@ -120,11 +124,11 @@ public class FXMLPdfViewverController implements Initializable {
                 });
             }
         });
-
+        
         Thread tr = new Thread(loadPdfTask);
         tr.setDaemon(true);
         tr.setPriority(Thread.MAX_PRIORITY);
         tr.start();
     }
-
+    
 }
