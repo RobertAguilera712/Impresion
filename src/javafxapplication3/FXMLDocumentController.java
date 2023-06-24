@@ -1,4 +1,3 @@
-
 package javafxapplication3;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
@@ -6,7 +5,11 @@ import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.ResourceBundle;
@@ -32,6 +35,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -46,6 +50,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileEqualsFileFilter;
@@ -78,16 +83,13 @@ public class FXMLDocumentController implements Initializable {
 
     private File currentFolder;
     private Label vacioLabel;
-    BooleanProperty hasParent = new SimpleBooleanProperty(false);
+    public BooleanProperty hasParent = new SimpleBooleanProperty(false);
     BooleanProperty loading = new SimpleBooleanProperty(false);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        File f = new File("C:\\");
-        listFiles(f);
         vacioLabel = new Label("Esta carpeta está vacía");
         vacioLabel.getStyleClass().add("h2");
-        btnAtras.layoutXProperty().bind(pane.widthProperty().subtract(btnAtras.widthProperty()).subtract(20));
         btnAtras.visibleProperty().bind(hasParent);
         btnAtras.setOnAction((event) -> {
             listFiles(currentFolder.getParentFile());
@@ -95,7 +97,10 @@ public class FXMLDocumentController implements Initializable {
         scrollPane.minWidthProperty().bind(pane.widthProperty().subtract(40));
         pathLabel.minWidthProperty().bind(pane.widthProperty().subtract(40));
         scrollPane.maxHeightProperty().bind(pane.heightProperty().subtract(100));
-        titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
+    }
+
+    public void ListFilesInDir(File dir) {
+        listFiles(dir);
     }
 
     private void listFiles(File file) {
@@ -103,7 +108,7 @@ public class FXMLDocumentController implements Initializable {
         currentFolder = file;
         hasParent.set(currentFolder.getParentFile() != null);
         flowPane.getChildren().clear();
-        WildcardFileFilter wildcardFileFilter = WildcardFileFilter.builder().setWildcards("*.pdf").get();
+        WildcardFileFilter wildcardFileFilter = WildcardFileFilter.builder().setWildcards("*.pdf", "*.docx").get();
         OrFileFilter orFileFilter = new OrFileFilter(wildcardFileFilter, DirectoryFileFilter.DIRECTORY);
         Collection<File> files = FileUtils.listFilesAndDirs(file, orFileFilter, null);
         files.remove(file);
@@ -154,9 +159,15 @@ public class FXMLDocumentController implements Initializable {
     private void fileClicked(File file) {
         if (file.isDirectory()) {
             listFiles(file);
-        } else if (file.isFile()) {
+        } else if (file.isFile() && FilenameUtils.isExtension(file.getName(), "pdf")) {
             try {
                 showPDF(file);
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            try {
+                showWord(file);
             } catch (IOException ex) {
                 Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -169,9 +180,31 @@ public class FXMLDocumentController implements Initializable {
         FXMLPdfViewverController scene2Controller = loader.getController();
         Stage stage = (Stage) pane.getScene().getWindow();
         Scene scene = new Scene(root);
-        stage.setScene(scene);
+        String css = getClass().getResource("css/styles.css").toExternalForm();
+        scene.getStylesheets().add(css);
         stage.show();
         scene2Controller.setPdf(file);
+        scene2Controller.showPdf();
+    }
+
+    private void showWord(File file) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLPdfViewver.fxml"));
+        Parent root = loader.load();
+        FXMLPdfViewverController scene2Controller = loader.getController();
+        Stage stage = (Stage) pane.getScene().getWindow();
+        Scene scene = new Scene(root);
+        String css = getClass().getResource("css/styles.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
+
+        stage.setFullScreen(true);
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreenExitHint("");
+        stage.setResizable(false);
+
+        stage.show();
+
+        scene2Controller.setPdfFromWord(file);
         scene2Controller.showPdf();
     }
 

@@ -2,7 +2,6 @@
 
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
-<?import io.github.palexdev.materialfx.controls.MFXProgressBar?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
@@ -11,14 +10,14 @@
 
 <Pane fx:id="pane" minHeight="360.0" minWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLDocumentController">
    <children>
-      <Label fx:id="titleLabel" layoutX="226.0" layoutY="14.0" styleClass="h1" text="Selecciona el archivo a imprimir" />
-      <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="544.0" layoutY="10.0" text="Atrás">
+      <Label fx:id="titleLabel" layoutX="${ (pane.width - titleLabel.width) / 2}" layoutY="14.0" styleClass="h1" text="Selecciona el archivo a imprimir" />
+      <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="${pane.width - btnAtras.width - 20}" layoutY="14.0" text="Atrás" visible="#{controller.hasParent}">
          <graphic>
             <MaterialDesignIconView glyphName="ARROW_LEFT" size="24" />
          </graphic>
       </MFXButton>
-      <Label fx:id="pathLabel" layoutY="60.0" layoutX="20.0" text="Label" />
-      <MFXScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutY="85.0" layoutX="20.0">
+      <Label fx:id="pathLabel" layoutX="20.0" layoutY="60.0" text="Label" />
+      <MFXScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" layoutX="20.0" layoutY="85.0">
          <content>
             <FlowPane fx:id="flowPane" alignment="TOP_CENTER" columnHalignment="CENTER" hgap="20.0" prefWrapLength="0.0" vgap="20.0">
                <padding>

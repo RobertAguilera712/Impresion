@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXProgressSpinner?>
 <?import javafx.scene.Group?>
@@ -12,10 +13,10 @@
 
 <Pane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLPdfViewverController">
    <children>
-      <Group fx:id="viewerGroup" layoutX="-15.0" layoutY="7.0">
+      <Group fx:id="viewerGroup">
          <children>
-            <ListView fx:id="listView" focusTraversable="false" layoutX="35.0" layoutY="43.0" />
-            <HBox fx:id="zoomHbox" alignment="CENTER" layoutX="15.0" layoutY="11.0" spacing="8.0">
+            <ListView fx:id="listView" focusTraversable="false" layoutX="20.0" layoutY="100.0" />
+            <HBox fx:id="zoomHbox" alignment="CENTER" layoutY="50.0" spacing="8.0">
                <children>
                   <MFXButton fx:id="zoomOutBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
                      <graphic>
@@ -30,14 +31,30 @@
                   </MFXButton>
                </children>
             </HBox>
-            <Label fx:id="pageLabel" layoutX="145.0" layoutY="15.0" text="Label" />
+            <Label fx:id="pageLabel" layoutX="20.0" layoutY="50.0" text="Label" />
+            <HBox fx:id="buttonsHbox" alignment="CENTER" layoutY="50.0" spacing="8.0">
+               <children>
+                  <MFXButton fx:id="btnImprimir" buttonType="RAISED" text="Imprimir">
+                     <graphic>
+                        <MaterialDesignIconView glyphName="PRINTER" size="24" />
+                     </graphic>
+                  </MFXButton>
+                  <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="10.0" layoutY="10.0" text="Atrás">
+                     <graphic>
+                        <MaterialDesignIconView glyphName="ARROW_LEFT" size="24" />
+                     </graphic>
+                  </MFXButton>
+               </children>
+            </HBox>
          </children>
       </Group>
-      <VBox fx:id="progressVbox" alignment="CENTER" layoutX="250.0" layoutY="89.0">
+      <VBox fx:id="progressVbox" alignment="CENTER" layoutX="250.0" layoutY="89.0" spacing="8.0">
          <children>
-            <Label fx:id="progressLabel" text="Label" />
-            <MFXProgressSpinner fx:id="progressSpinner" />
+            <Label fx:id="progressLabel" styleClass="h2" text="Label" />
+            <MFXProgressSpinner fx:id="progressSpinner" minHeight="100.0" minWidth="100.0" />
+            <MFXButton fx:id="cancelarBtn" text="Cancelar" />
          </children>
       </VBox>
+      <Label fx:id="titleLabel" layoutX="272.0" layoutY="8.0" styleClass="h2" text="Label" />
    </children>
 </Pane>

@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="AutoImprimir.jar" size="47485" download="eager" />
+    <jar href="AutoImprimir.jar" size="47206" download="eager" />
     <jar href="lib\adapter-0.2.0.jar" size="12415" download="eager" />
     <jar href="lib\commons-io-2.13.0-javadoc.jar" size="3041789" download="eager" />
     <jar href="lib\commons-io-2.13.0-sources.jar" size="507231" download="eager" />
