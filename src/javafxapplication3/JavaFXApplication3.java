@@ -30,9 +30,9 @@ public class JavaFXApplication3 extends Application {
         scene.getStylesheets().add(css);
         
         stage.setScene(scene);
-        stage.setFullScreen(true);
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setFullScreenExitHint("");
+//        stage.setFullScreen(true);
+//        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+//        stage.setFullScreenExitHint("");
         stage.setResizable(false);
         stage.show();
         documentController.ListFilesInDir(new File("C:\\"));

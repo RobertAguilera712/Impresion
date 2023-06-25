@@ -179,10 +179,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root = loader.load();
         FXMLPdfViewverController scene2Controller = loader.getController();
         Stage stage = (Stage) pane.getScene().getWindow();
-        Scene scene = new Scene(root);
-        String css = getClass().getResource("css/styles.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.show();
+        stage.getScene().setRoot(root);
         scene2Controller.setPdf(file);
         scene2Controller.showPdf();
     }
@@ -192,18 +189,7 @@ public class FXMLDocumentController implements Initializable {
         Parent root = loader.load();
         FXMLPdfViewverController scene2Controller = loader.getController();
         Stage stage = (Stage) pane.getScene().getWindow();
-        Scene scene = new Scene(root);
-        String css = getClass().getResource("css/styles.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setScene(scene);
-
-        stage.setFullScreen(true);
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setFullScreenExitHint("");
-        stage.setResizable(false);
-
-        stage.show();
-
+        stage.getScene().setRoot(root);
         scene2Controller.setPdfFromWord(file);
         scene2Controller.showPdf();
     }

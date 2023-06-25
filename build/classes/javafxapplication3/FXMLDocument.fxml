@@ -11,7 +11,7 @@
 <Pane fx:id="pane" minHeight="360.0" minWidth="640.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLDocumentController">
    <children>
       <Label fx:id="titleLabel" layoutX="${ (pane.width - titleLabel.width) / 2}" layoutY="14.0" styleClass="h1" text="Selecciona el archivo a imprimir" />
-      <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="${pane.width - btnAtras.width - 20}" layoutY="14.0" text="Atrás" visible="#{controller.hasParent}">
+      <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="${pane.width - btnAtras.width - 20}" layoutY="14.0" text="Atrás">
          <graphic>
             <MaterialDesignIconView glyphName="ARROW_LEFT" size="24" />
          </graphic>

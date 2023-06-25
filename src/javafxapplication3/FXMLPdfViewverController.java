@@ -134,16 +134,25 @@ public class FXMLPdfViewverController implements Initializable {
         listView.minHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()).subtract(20));
         listView.maxHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()).subtract(20));
         listView.setOnZoom((ZoomEvent event) -> {
-            pageHeightPropery.set(pageHeightPropery.multiply(event.getZoomFactor()).get());
+            double newZoom = pageHeightPropery.multiply(event.getZoomFactor()).get();
+            newZoom = newZoom > initZoom * 5 ? initZoom * 5 : newZoom;
+            newZoom = newZoom < initZoom * 0.2 ? initZoom * 0.2 : newZoom;
+            pageHeightPropery.set(newZoom);
+
         });
         pageHeightPropery = new SimpleDoubleProperty(listView.heightProperty().get());
         zoomValue = new SimpleIntegerProperty(0);
         zoomLabel.textProperty().bind(zoomValue.asString());
         zoomInBtn.setOnAction((event) -> {
-            pageHeightPropery.set(pageHeightPropery.add(initZoom * 0.1).get());
+            double newZoom = pageHeightPropery.add(initZoom * 0.1).get();
+            newZoom = newZoom > initZoom * 5 ? initZoom * 5 : newZoom;
+            pageHeightPropery.set(newZoom);
+
         });
         zoomOutBtn.setOnAction((event) -> {
-            pageHeightPropery.set(pageHeightPropery.subtract(initZoom * 0.1).get());
+            double newZoom = pageHeightPropery.subtract(initZoom * 0.1).get();
+            newZoom = newZoom < initZoom * 0.2 ? initZoom * 0.2 : newZoom;
+            pageHeightPropery.set(newZoom);
         });
         cancelarBtn.setOnAction((event) -> {
             if (loadPdfTask != null && loadPdfTask.isRunning()) {
@@ -170,15 +179,8 @@ public class FXMLPdfViewverController implements Initializable {
         titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
     }
 
-    public void initUi() {
-
-    }
-
     public void showPdf() {
         loadPdfTask = new LoadPdfTask(pdf, pageHeightPropery);
-        pageHeightPropery.set(listView.heightProperty().get());
-        initZoom = listView.heightProperty().get();
-        zoomValue.bind(pageHeightPropery.divide(initZoom).multiply(100));
 
         progressLabel.textProperty().bind(loadPdfTask.messageProperty());
         progressVbox.visibleProperty().bind(loadPdfTask.runningProperty());
@@ -187,6 +189,10 @@ public class FXMLPdfViewverController implements Initializable {
             listView.setItems(newValue);
         });
         loadPdfTask.setOnSucceeded((event) -> {
+            pageHeightPropery.set(listView.heightProperty().get());
+            initZoom = listView.heightProperty().get();
+            zoomValue.bind(pageHeightPropery.divide(initZoom).multiply(100));
+
             pageLabel.setText(1 + " / " + listView.getItems().size());
             ScrollBar sb = (ScrollBar) listView.lookup(".scroll-bar:vertical");
             if (sb != null) {
