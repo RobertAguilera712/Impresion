@@ -7,6 +7,7 @@ package javafxapplication3;
 
 import java.io.File;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,10 +31,16 @@ public class JavaFXApplication3 extends Application {
         scene.getStylesheets().add(css);
         
         stage.setScene(scene);
+        
+//        Platform.setImplicitExit(false);
+//        stage.setOnCloseRequest((event) -> {
+//            event.consume();
+//        });
+        
 //        stage.setFullScreen(true);
 //        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
 //        stage.setFullScreenExitHint("");
-        stage.setResizable(false);
+//        stage.setResizable(false);
         stage.show();
         documentController.ListFilesInDir(new File("C:\\"));
     }

@@ -42,3 +42,28 @@ ListView .list-view .list-cell:odd {
 ListView .list-view .list-cell:even {
     -fx-background-color: blue;
 }
+
+.combo-box .list-cell:filled:hover ,
+.choice-box .list-cell:filled:hover  {
+    -fx-background-color: #f5f5f5;
+}
+
+.combo-box .list-cell .text ,
+.choice-box .list-cell .text  {
+    -fx-fill: black;
+}
+
+.combo-box .list-cell:filled:hover .text ,
+.choice-box .list-cell:filled:hover .text  {
+    -fx-fill: black;
+}
+
+.combo-box .list-cell:filled:selected ,
+.choice-box .list-cell:filled:selected  {
+    -fx-background-color: #f5f5f5;
+}
+
+.combo-box .list-cell:filled:selected .text,
+.choice-box .list-cell:filled:selected .text {
+    -fx-fill: #4059a9;
+}

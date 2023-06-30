@@ -1,4 +1,4 @@
-package javafxapplication3;
+    package javafxapplication3;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
@@ -83,8 +83,7 @@ public class FXMLDocumentController implements Initializable {
 
     private File currentFolder;
     private Label vacioLabel;
-    public BooleanProperty hasParent = new SimpleBooleanProperty(false);
-    BooleanProperty loading = new SimpleBooleanProperty(false);
+    BooleanProperty hasParent = new SimpleBooleanProperty(false);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -145,7 +144,11 @@ public class FXMLDocumentController implements Initializable {
         if (file.isDirectory()) {
             image = new Image(getClass().getResourceAsStream("icons/folder.png"));
         } else if (file.isFile()) {
-            image = new Image(getClass().getResourceAsStream("icons/pdf.png"));
+            if (FilenameUtils.isExtension(file.getName(), "pdf")) {
+                image = new Image(getClass().getResourceAsStream("icons/pdf.png"));
+            } else {
+                image = new Image(getClass().getResourceAsStream("icons/word.png"));
+            }
         }
         imageView.setImage(image);
         container.add(imageView, 0, 0);
@@ -191,7 +194,6 @@ public class FXMLDocumentController implements Initializable {
         Stage stage = (Stage) pane.getScene().getWindow();
         stage.getScene().setRoot(root);
         scene2Controller.setPdfFromWord(file);
-        scene2Controller.showPdf();
     }
 
 }

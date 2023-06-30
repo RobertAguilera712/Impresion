@@ -1,12 +1,9 @@
 package javafxapplication3;
 
-import com.documents4j.api.DocumentType;
-import com.documents4j.api.IConverter;
-import com.documents4j.job.LocalConverter;
-import com.sun.javafx.scene.control.skin.ListViewSkin;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXListView;
+import io.github.palexdev.materialfx.controls.MFXPopup;
 import io.github.palexdev.materialfx.controls.MFXProgressSpinner;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
 import java.io.File;
@@ -22,22 +19,23 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.Observable;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Worker;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -49,18 +47,24 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafxapplication3.models.NoSelectionModel;
 import javafxapplication3.models.PdfModel;
 import javafxapplication3.tasks.LoadPdfTask;
+import javafxapplication3.tasks.WordToPdfTask;
+import javax.swing.GroupLayout;
+import org.controlsfx.control.GridCell;
+import org.controlsfx.control.GridView;
 
 public class FXMLPdfViewverController implements Initializable {
 
     private File pdf;
-    private PdfModel model;
-    private int numPages;
+    private File word;
     @FXML
     private Pane pane;
 
@@ -100,35 +104,56 @@ public class FXMLPdfViewverController implements Initializable {
     @FXML
     private MFXButton cancelarBtn;
     private LoadPdfTask loadPdfTask;
+    private WordToPdfTask wordToPdfTask;
+    BooleanProperty loading = new SimpleBooleanProperty(false);
+    private Popup popup;
 
     public void setPdf(File pdf) {
-        this.pdf = pdf;
-        titleLabel.setText(pdf.getAbsolutePath());
+        try {
+            this.pdf = pdf;
+            titleLabel.setText(pdf.getAbsolutePath());
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLImprimir.fxml"));
+            Parent root = loader.load();
+            FXMLImprimirController imprimirController = loader.getController();
+            popup = new Popup();
+            imprimirController.setPdf(pdf);
+            imprimirController.setCancelar((event) -> {
+                popup.hide();
+            });
+            popup.centerOnScreen();
+            popup.getContent().add(root);
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setPdfFromWord(File word) {
+        this.word = word;
+        titleLabel.setText(word.getAbsolutePath());
         convertWordToPdf(word);
     }
 
     private void convertWordToPdf(File inputWord) {
-        File outputFile = new File(inputWord.getParentFile().getAbsolutePath(), inputWord.getName().concat(".pdf"));
-        try {
-            InputStream docxInputStream = new FileInputStream(inputWord);
-            OutputStream outputStream = new FileOutputStream(outputFile);
-            IConverter converter = LocalConverter.builder().build();
-            converter.convert(docxInputStream).as(DocumentType.DOCX).to(outputStream).as(DocumentType.PDF).execute();
-            outputStream.close();
-            docxInputStream.close();
-            converter.shutDown();
-            System.out.println("success");
-            pdf = outputFile;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        wordToPdfTask = new WordToPdfTask(inputWord);
+        progressLabel.textProperty().bind(wordToPdfTask.messageProperty());
+        loading.bind(wordToPdfTask.runningProperty());
+        wordToPdfTask.setOnSucceeded((event) -> {
+            pdf = wordToPdfTask.getValue();
+            if (pdf != null) {
+                showPdf();
+            }
+        });
+        Thread tr = new Thread(wordToPdfTask);
+        tr.setDaemon(true);
+        tr.setPriority(Thread.MAX_PRIORITY);
+        tr.start();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        progressVbox.visibleProperty().bind(loading);
+
         listView.setSelectionModel(new NoSelectionModel<>());
         listView.minWidthProperty().bind(pane.widthProperty().subtract(listView.layoutXProperty().multiply(2)));
         listView.minHeightProperty().bind(pane.heightProperty().subtract(listView.layoutYProperty()).subtract(20));
@@ -158,7 +183,14 @@ public class FXMLPdfViewverController implements Initializable {
             if (loadPdfTask != null && loadPdfTask.isRunning()) {
                 loadPdfTask.cancel();
                 try {
-                    listFilesInDir();
+                    listFilesInDir(pdf);
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else if (wordToPdfTask != null && wordToPdfTask.isRunning()) {
+                wordToPdfTask.cancel();
+                try {
+                    listFilesInDir(word);
                 } catch (IOException ex) {
                     Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -166,10 +198,13 @@ public class FXMLPdfViewverController implements Initializable {
         });
         btnAtras.setOnAction((event) -> {
             try {
-                listFilesInDir();
+                listFilesInDir(pdf);
             } catch (IOException ex) {
                 Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
             }
+        });
+        btnImprimir.setOnAction((event) -> {
+            popup.show(pane.getScene().getWindow());
         });
         viewerGroup.visibleProperty().bind(progressVbox.visibleProperty().not());
         progressVbox.layoutXProperty().bind(pane.widthProperty().subtract(progressVbox.widthProperty()).divide(2));
@@ -183,7 +218,7 @@ public class FXMLPdfViewverController implements Initializable {
         loadPdfTask = new LoadPdfTask(pdf, pageHeightPropery);
 
         progressLabel.textProperty().bind(loadPdfTask.messageProperty());
-        progressVbox.visibleProperty().bind(loadPdfTask.runningProperty());
+        loading.bind(loadPdfTask.runningProperty());
         progressSpinner.progressProperty().bind(loadPdfTask.progressProperty());
         loadPdfTask.valueProperty().addListener((ObservableValue<? extends ObservableList<VBox>> observable, ObservableList<VBox> oldValue, ObservableList<VBox> newValue) -> {
             listView.setItems(newValue);
@@ -210,17 +245,15 @@ public class FXMLPdfViewverController implements Initializable {
         tr.start();
     }
 
-    private void listFilesInDir() throws IOException {
+    private void listFilesInDir(File file) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
         Parent root = loader.load();
         FXMLDocumentController documentController = loader.getController();
         Stage stage = (Stage) pane.getScene().getWindow();
-        Scene scene = new Scene(root);
-        String css = getClass().getResource("css/styles.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setScene(scene);
-        stage.show();
-        documentController.ListFilesInDir(pdf.getParentFile());
+        stage.getScene().setRoot(root);
+        documentController.ListFilesInDir(file.getParentFile());
     }
+
+ 
 
 }

@@ -8,13 +8,14 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="AutoImprimir.jar" size="47113" download="eager" />
+    <jar href="AutoImprimir.jar" size="57697" download="eager" />
     <jar href="lib\adapter-0.2.0.jar" size="12415" download="eager" />
     <jar href="lib\commons-io-2.13.0-javadoc.jar" size="3041789" download="eager" />
     <jar href="lib\commons-io-2.13.0-sources.jar" size="507231" download="eager" />
     <jar href="lib\commons-io-2.13.0-test-sources.jar" size="496950" download="eager" />
     <jar href="lib\commons-io-2.13.0-tests.jar" size="874444" download="eager" />
     <jar href="lib\commons-io-2.13.0.jar" size="483954" download="eager" />
+    <jar href="lib\controlsfx-8.40.14.jar" size="1215643" download="eager" />
     <jar href="lib\documents4j-api-1.0.3.jar" size="11144" download="eager" />
     <jar href="lib\documents4j-local-1.0.3.jar" size="12419" download="eager" />
     <jar href="lib\documents4j-transformer-1.0.3.jar" size="10856" download="eager" />
@@ -26,6 +27,7 @@
     <jar href="lib\documents4j-util-transformer-process-1.0.3.jar" size="5740" download="eager" />
     <jar href="lib\fontawesomefx-8.9.jar" size="571068" download="eager" />
     <jar href="lib\guava-18.0.jar" size="2256213" download="eager" />
+    <jar href="lib\jfoenix-8.0.10.jar" size="2710207" download="eager" />
     <jar href="lib\materialfx-11.13.5.jar" size="3226858" download="eager" />
     <jar href="lib\pdfbox-app-2.0.28.jar" size="10085495" download="eager" />
     <jar href="lib\slf4j-api-1.7.13.jar" size="33088" download="eager" />
