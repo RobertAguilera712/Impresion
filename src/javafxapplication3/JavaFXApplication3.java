@@ -42,7 +42,7 @@ public class JavaFXApplication3 extends Application {
 //        stage.setFullScreenExitHint("");
 //        stage.setResizable(false);
         stage.show();
-        documentController.ListFilesInDir(new File("C:\\"));
+//        documentController.ListFilesInDir(new File("C:\\"));
     }
     
     /**

@@ -1,4 +1,4 @@
-    package javafxapplication3;
+package javafxapplication3;
 
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -27,6 +28,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -49,6 +51,8 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import net.samuelcampos.usbdrivedetector.USBDeviceDetectorManager;
+import net.samuelcampos.usbdrivedetector.events.DeviceEventType;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
@@ -84,11 +88,33 @@ public class FXMLDocumentController implements Initializable {
     private File currentFolder;
     private Label vacioLabel;
     BooleanProperty hasParent = new SimpleBooleanProperty(false);
+    USBDeviceDetectorManager driveDetector = new USBDeviceDetectorManager();
+    @FXML
+    private Group filesGroup;
+    @FXML
+    private Label usbLabel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        driveDetector.addDriveListener((usbse) -> {
+            if (usbse.getEventType() == DeviceEventType.CONNECTED) {
+                System.out.println("CONNECTED");
+                Platform.runLater(() -> {
+                    listFiles(usbse.getStorageDevice().getRootDirectory());
+                });
+            } else {
+                Platform.runLater(() -> {
+                    usbLabel.visibleProperty().set(true);
+                });
+            }
+        });
+        titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
+        usbLabel.layoutXProperty().bind(pane.widthProperty().subtract(usbLabel.widthProperty()).divide(2));
+        usbLabel.layoutYProperty().bind(pane.heightProperty().subtract(usbLabel.heightProperty()).divide(2));
+        filesGroup.visibleProperty().bind(usbLabel.visibleProperty().not());
         vacioLabel = new Label("Esta carpeta está vacía");
         vacioLabel.getStyleClass().add("h2");
+        btnAtras.layoutXProperty().bind(pane.widthProperty().subtract(btnAtras.widthProperty()).subtract(20));
         btnAtras.visibleProperty().bind(hasParent);
         btnAtras.setOnAction((event) -> {
             listFiles(currentFolder.getParentFile());
@@ -117,6 +143,7 @@ public class FXMLDocumentController implements Initializable {
         for (File f : files) {
             flowPane.getChildren().add(generarItemGrid(f));
         }
+        usbLabel.visibleProperty().set(false);
     }
 
     private GridPane generarItemGrid(File file) {
