@@ -98,13 +98,21 @@ public class FXMLDocumentController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         driveDetector.addDriveListener((usbse) -> {
             if (usbse.getEventType() == DeviceEventType.CONNECTED) {
-                System.out.println("CONNECTED");
                 Platform.runLater(() -> {
                     listFiles(usbse.getStorageDevice().getRootDirectory());
                 });
             } else {
                 Platform.runLater(() -> {
-                    usbLabel.visibleProperty().set(true);
+                    try {
+                        usbLabel.visibleProperty().set(true);
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
+                        Parent root = loader.load();
+                        FXMLDocumentController documentController = loader.getController();
+                        Stage stage = JavaFXApplication3.currentStage;
+                        stage.getScene().setRoot(root);
+                    } catch (IOException ex) {
+                        Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 });
             }
         });
@@ -122,6 +130,13 @@ public class FXMLDocumentController implements Initializable {
         scrollPane.minWidthProperty().bind(pane.widthProperty().subtract(40));
         pathLabel.minWidthProperty().bind(pane.widthProperty().subtract(40));
         scrollPane.maxHeightProperty().bind(pane.heightProperty().subtract(100));
+
+        Label creditoLabel = new Label();
+        creditoLabel.getStyleClass().add("h3");
+        pane.getChildren().add(creditoLabel);
+        creditoLabel.layoutXProperty().bind(pane.widthProperty().subtract(creditoLabel.widthProperty()).subtract(20));
+        creditoLabel.layoutYProperty().bind(pane.heightProperty().subtract(creditoLabel.heightProperty()).subtract(20));
+        creditoLabel.textProperty().bind(JavaFXApplication3.credito.asString("Crédito: $%d"));
     }
 
     public void ListFilesInDir(File dir) {

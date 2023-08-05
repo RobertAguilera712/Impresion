@@ -58,8 +58,6 @@ import javafxapplication3.models.PdfModel;
 import javafxapplication3.tasks.LoadPdfTask;
 import javafxapplication3.tasks.WordToPdfTask;
 import javax.swing.GroupLayout;
-import org.controlsfx.control.GridCell;
-import org.controlsfx.control.GridView;
 
 public class FXMLPdfViewverController implements Initializable {
 
@@ -212,6 +210,14 @@ public class FXMLPdfViewverController implements Initializable {
         buttonsHbox.layoutXProperty().bind(pane.widthProperty().subtract(buttonsHbox.widthProperty()).subtract(20));
         zoomHbox.layoutXProperty().bind(pane.widthProperty().subtract(zoomHbox.widthProperty()).divide(2));
         titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
+
+        Label creditoLabel = new Label();
+        creditoLabel.getStyleClass().add("h3");
+        pane.getChildren().add(creditoLabel);
+        creditoLabel.layoutXProperty().bind(pane.widthProperty().subtract(creditoLabel.widthProperty()).subtract(40));
+        creditoLabel.layoutYProperty().bind(pane.heightProperty().subtract(creditoLabel.heightProperty()).subtract(20));
+        creditoLabel.textProperty().bind(JavaFXApplication3.credito.asString("Crédito: $%d"));
+
     }
 
     public void showPdf() {
@@ -253,7 +259,5 @@ public class FXMLPdfViewverController implements Initializable {
         stage.getScene().setRoot(root);
         documentController.ListFilesInDir(file.getParentFile());
     }
-
- 
 
 }
