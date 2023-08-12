@@ -24,6 +24,14 @@ and open the template in the editor.
     -fx-font-size: 14;
 }
 
+.credito{
+    -fx-font-weight: bold;
+    -fx-font-size: 18;
+    -fx-background-color: #ffc107;
+    -fx-label-padding: 5;
+    -fx-text-fill: white;
+}
+
 GridPane.file{
     -fx-alignment: TOP_CENTER;
     -fx-cursor: hand;
@@ -67,3 +75,21 @@ ListView .list-view .list-cell:even {
 .choice-box .list-cell:filled:selected .text {
     -fx-fill: #4059a9;
 }
+
+.mfx-button{
+    -fx-background-color: #780dd7;
+    -fx-text-fill: white;
+}
+
+FontAwesomeIconView{
+    fx-fill: white;
+}
+
+.FontAwesomeIconView{
+        fx-fill: white;
+}
+
+.font-awesome-icon-view{
+        fx-fill: white;
+}
+

@@ -7,96 +7,108 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <Pane fx:id="pane" prefHeight="431.0" prefWidth="600.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="javafxapplication3.FXMLImprimirController">
-   <children>
-      <HBox fx:id="colorHbox" alignment="CENTER" layoutX="28.0" layoutY="36.0" spacing="10.0">
-         <children>
-            <Label text="Imprimir a: " />
-            <JFXComboBox fx:id="colorCombo" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <HBox fx:id="nCopiasHbox" alignment="CENTER" layoutX="28.0" layoutY="98.0">
-         <children>
-            <Label text="Número de copias: " />
-            <HBox alignment="CENTER" spacing="8.0">
-                     <children>
-                        <MFXButton fx:id="lessBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="MINUS" />
-                           </graphic>
-                        </MFXButton>
-                        <Label fx:id="copiasLabel" text="Label" />
-                        <MFXButton fx:id="plusBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
-                           <graphic>
-                              <FontAwesomeIconView glyphName="PLUS" />
-                           </graphic>
-                        </MFXButton>
-                     </children>
-                  </HBox>
-         </children>
-      </HBox>
-      <MFXButton fx:id="imprimirBtn" buttonType="RAISED" layoutX="235.0" layoutY="345.0" text="Imprimir" />
-      <HBox fx:id="pagsHbox" alignment="CENTER" layoutX="28.0" layoutY="138.0" spacing="10.0">
-         <children>
-            <Label text="Imprimir: " />
-            <JFXComboBox fx:id="pagsCombo" HBox.hgrow="ALWAYS" />
-         </children>
-      </HBox>
-      <ListView fx:id="pagsListView" layoutX="14.0" layoutY="177.0" prefHeight="200.0" prefWidth="200.0" />
-      <MFXButton fx:id="cancelarBtn" buttonType="RAISED" layoutX="334.0" layoutY="345.0" text="Cancelar" />
-      <Group fx:id="rangoGroup" layoutX="14.0" layoutY="188.0">
-         <children>
-            <HBox alignment="CENTER" layoutX="1.0">
-               <children>
-                  <Label text="Pagina incial: " />
-                  <JFXComboBox fx:id="inicioCombo" />
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" layoutY="42.0">
-               <children>
-                  <Label text="Pagina final:   " />
-                  <JFXComboBox fx:id="finCombo" />
-               </children>
-            </HBox>
-         </children>
-      </Group>
-      <VBox layoutX="299.0" layoutY="36.0" spacing="8.0">
-         <children>
-            <Label fx:id="pagsLabel" text="Label" />
-            <Label fx:id="copiasTotalLabel" layoutX="10.0" layoutY="10.0" text="Label" />
-            <Label fx:id="precioLabel" text="Label" />
-            <Label fx:id="totalLabel" text="Label" />
-            <Label fx:id="creditoLabel" text="Label" />
-            <Label fx:id="faltanteLabel" text="Label" />
-            <Label fx:id="cambioLabel" text="Label" />
-         </children>
-      </VBox>
-      <Label fx:id="errorLabel" layoutX="${(pane.width - errorLabel.width) / 2}" layoutY="380" text="Ingresa el importe total antes de imprimir tu documento" textFill="RED" visible="false" />
-      <VBox fx:id="promtVbox" alignment="TOP_CENTER" layoutX="214.0" layoutY="131.0" style="-fx-background-color: #fefefe;" visible="false">
-         <children>
-            <Label styleClass="h2" text="¿Seguir imprimiendo?" />
-            <Label layoutX="140.0" layoutY="30.0" styleClass="h3" text="¿Quieres seguir imprimiendo?">
-               <VBox.margin>
-                  <Insets top="20.0" />
-               </VBox.margin>
-            </Label>
-            <HBox alignment="CENTER" spacing="20.0">
-               <children>
-                  <MFXButton fx:id="seguirBtn" buttonType="RAISED" text="Si" />
-                  <MFXButton fx:id="noSeguirBtn" buttonType="RAISED" layoutX="151.0" layoutY="10.0" text="No" />
-               </children>
-               <VBox.margin>
-                  <Insets top="50.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-         </padding>
-      </VBox>
-   </children>
+    <children>
+        <VBox fx:id="optionsVbox" alignment="TOP_LEFT" layoutX="${(pane.width / 2) - optionsVbox.width - 50}" layoutY="30.0" spacing="20">
+            <children>
+                <HBox fx:id="colorHbox" alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="Imprimir a: " />
+                        <JFXComboBox fx:id="colorCombo" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <HBox fx:id="nCopiasHbox" alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="Número de copias: " />
+                        <HBox alignment="CENTER" spacing="10.0">
+                            <children>
+                                <MFXButton fx:id="lessBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
+                                    <graphic>
+                                        <FontAwesomeIconView fill="WHITE" glyphName="MINUS" />
+                                    </graphic>
+                                </MFXButton>
+                                <Label fx:id="copiasLabel" text="Label" />
+                                <MFXButton fx:id="plusBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
+                                    <graphic>
+                                        <FontAwesomeIconView fill="WHITE" glyphName="PLUS" />
+                                    </graphic>
+                                </MFXButton>
+                            </children>
+                        </HBox>
+                    </children>
+                </HBox>
+                <HBox fx:id="pagsHbox" alignment="CENTER_LEFT" spacing="10.0">
+                    <children>
+                        <Label text="Imprimir: " />
+                        <JFXComboBox fx:id="pagsCombo" HBox.hgrow="ALWAYS" />
+                    </children>
+                </HBox>
+                <Pane>
+                    <children>
+                        <ListView fx:id="pagsListView" layoutX="0" layoutY="0" prefHeight="200.0" prefWidth="200.0" />
+                        <Group fx:id="rangoGroup" layoutX="0" layoutY="0">
+                            <children>
+                                <VBox>
+                                    <HBox alignment="CENTER">
+                                        <children>
+                                            <Label text="Pagina incial: " />
+                                            <JFXComboBox fx:id="inicioCombo" />
+                                        </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER">
+                                        <children>
+                                            <Label text="Pagina final:   " />
+                                            <JFXComboBox fx:id="finCombo" />
+                                        </children>
+                                    </HBox>
+                                </VBox>
+                            </children>
+                        </Group>
+                    </children>
+                </Pane>
+            </children>
+        </VBox>
+        
+        <MFXButton fx:id="imprimirBtn" buttonType="RAISED" layoutX="${(pane.width / 2)  - imprimirBtn.width - 40}" layoutY="${pane.height - imprimirBtn.height - 40}" text="Imprimir" />
+        <MFXButton fx:id="cancelarBtn" buttonType="RAISED" layoutX="${(pane.width / 2) + 40}" layoutY="${pane.height - cancelarBtn.height - 40}" text="Cancelar" />
+        <Label fx:id="errorLabel" layoutX="${(pane.width - errorLabel.width) / 2}" layoutY="${pane.height - errorLabel.height - 10}" text="Ingresa el importe total antes de imprimir tu documento" textFill="RED" visible="false" />
+
+        <VBox fx:id="infoVbox" layoutX="${(pane.width / 2) + 50}" layoutY="30" spacing="8.0">
+            <children>
+                <Label fx:id="pagsLabel" text="Label" />
+                <Label fx:id="copiasTotalLabel" layoutX="10.0" layoutY="10.0" text="Label" />
+                <Label fx:id="precioLabel" text="Label" />
+                <Label fx:id="totalLabel" text="Label" />
+                <Label fx:id="creditoLabel" text="Label" />
+                <Label fx:id="faltanteLabel" text="Label" />
+                <Label fx:id="cambioLabel" text="Label" />
+            </children>
+        </VBox>
+        <VBox fx:id="promtVbox" alignment="TOP_CENTER" layoutX="${(pane.width - promtVbox.width) / 2}" layoutY="${(pane.height - promtVbox.height) / 2}" style="-fx-background-color: #fefefe;" visible="false">
+            <children>
+                <Label styleClass="h1" text="¿Seguir imprimiendo?" />
+                <Label layoutX="140.0" layoutY="30.0" styleClass="h2" text="¿Quieres seguir imprimiendo?">
+                    <VBox.margin>
+                        <Insets top="20.0" />
+                    </VBox.margin>
+                </Label>
+                <HBox alignment="CENTER" spacing="20.0">
+                    <children>
+                        <MFXButton fx:id="seguirBtn" buttonType="RAISED" text="Si" />
+                        <MFXButton fx:id="noSeguirBtn" buttonType="RAISED" layoutX="151.0" layoutY="10.0" text="No" />
+                    </children>
+                    <VBox.margin>
+                        <Insets top="50.0" />
+                    </VBox.margin>
+                </HBox>
+            </children>
+            <padding>
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </padding>
+        </VBox>
+    </children>
 </Pane>

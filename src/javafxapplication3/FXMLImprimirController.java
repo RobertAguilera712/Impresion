@@ -172,14 +172,16 @@ public class FXMLImprimirController implements Initializable {
 
         seguirBtn.setOnAction((event) -> {
             int nuevoCredito = JavaFXApplication3.credito.get() - totalProperty.get();
-            JavaFXApplication3.credito.set(nuevoCredito);
+            JavaFXApplication3.setCredito(nuevoCredito);
             promtVbox.setVisible(false);
+            mostrarPantallaPrincipal();
+            cancelarBtn.fire();
         });
 
         noSeguirBtn.setOnAction((event) -> {
             promtVbox.setVisible(false);
             JavaFXApplication3.darCambio((byte) cambioProperty.get());
-            JavaFXApplication3.credito.set(0);
+            JavaFXApplication3.setCredito(0);
             mostrarPantallaPrincipal();
             cancelarBtn.fire();
         });

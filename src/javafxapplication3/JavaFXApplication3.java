@@ -26,7 +26,7 @@ public class JavaFXApplication3 extends Application {
     public static IntegerProperty credito = new SimpleIntegerProperty(0);
     public static int precioBlancoNegro = 1;
     public static int precioColor = 2;
-    
+
     public static Stage currentStage;
 
     @Override
@@ -42,14 +42,15 @@ public class JavaFXApplication3 extends Application {
 
         stage.setScene(scene);
 
-//        Platform.setImplicitExit(false);
-//        stage.setOnCloseRequest((event) -> {
-//            event.consume();
-//        });
-//        stage.setFullScreen(true);
-//        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-//        stage.setFullScreenExitHint("");
-//        stage.setResizable(false);
+        Platform.setImplicitExit(false);
+        stage.setOnCloseRequest((event) -> {
+            event.consume();
+        });
+        stage.setFullScreen(true);
+        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+        stage.setFullScreenExitHint("");
+        stage.setResizable(false);
+        stage.setAlwaysOnTop(true);
         conexion();
         stage.show();
 //        documentController.ListFilesInDir(new File("C:\\"));
@@ -93,37 +94,49 @@ public class JavaFXApplication3 extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-    
-    private void activarTragaMoenedas(){
-             port.writeBytes(new byte[]{58, 77, 49, 0, 13}, 5);
-    }
-    
-    public static void darCambio(byte cambio){
-        byte cantidad = (byte) (cambio + 1);
-     port.writeBytes(new byte[]{58, 77, 50, cantidad, 13}, 5);
+
+    private void activarTragaMoenedas() {
+        System.out.println("Activando traga monedas");
+        port.writeBytes(new byte[]{58, 77, 49, 0, 13}, 5);
     }
 
-        private void aumentarCredio(int valor) {
+    public static void darCambio(byte cambio) {
+        byte cantidad = (byte) (cambio + 1);
+        port.writeBytes(new byte[]{58, 77, 50, cantidad, 13}, 5);
+    }
+    
+    public static void setCredito(int credit){
+          Platform.runLater(() -> {
+            credito.set(credit);
+        });
+        /**
+         * 3A 4D 33 XX 0D Dónde 3A = : en ASCII, 58 en byte 4D =M en ASCII, 77
+         * en byte 33 = 3 en ASCII, 51 en byte XX = Cantidad de dinero que
+         * escribirá en la pantalla LCD expresada en hexadecimal, variable
+         * nuevoCredito 0D = Byte de final de cadena, 13 en byte
+         */
+        port.writeBytes(new byte[]{58, 77, 51, (byte)credit, 13}, 5);
+    }
+
+    private void aumentarCredio(int valor) {
         byte nuevoCredito = (byte) (credito.get() + valor);
         Platform.runLater(() -> {
             credito.set(credito.get() + valor);
         });
         /**
-         * 3A 4D 33 XX 0D 
-         * Dónde 
-         * 3A = : en ASCII, 58 en byte
-         * 4D =M en ASCII, 77 en byte
-         * 33 = 3 en ASCII, 51 en byte
-         * XX = Cantidad de dinero que escribirá en la pantalla LCD expresada en
-         * hexadecimal, variable nuevoCredito
-         * 0D = Byte de final de cadena, 13 en byte
+         * 3A 4D 33 XX 0D Dónde 3A = : en ASCII, 58 en byte 4D =M en ASCII, 77
+         * en byte 33 = 3 en ASCII, 51 en byte XX = Cantidad de dinero que
+         * escribirá en la pantalla LCD expresada en hexadecimal, variable
+         * nuevoCredito 0D = Byte de final de cadena, 13 en byte
          */
         port.writeBytes(new byte[]{58, 77, 51, nuevoCredito, 13}, 5);
 
     }
-    
+
     public interface ConfirmationListener {
+
         void onConfirm();
+
         void onCancel();
     }
 
@@ -157,7 +170,6 @@ public class JavaFXApplication3 extends Application {
         // Show the dialog
         dialog.show();
     }
-
 
     SerialPortDataListener dataListener = new SerialPortDataListener() {
         @Override

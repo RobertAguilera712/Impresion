@@ -20,13 +20,13 @@
                <children>
                   <MFXButton fx:id="zoomOutBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
                      <graphic>
-                        <FontAwesomeIconView glyphName="MINUS" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="MINUS" />
                      </graphic>
                   </MFXButton>
                   <Label fx:id="zoomLabel" text="Label" />
                   <MFXButton fx:id="zoomInBtn" buttonType="RAISED" contentDisplay="GRAPHIC_ONLY">
                      <graphic>
-                        <FontAwesomeIconView glyphName="PLUS" />
+                        <FontAwesomeIconView fill="WHITE" glyphName="PLUS" />
                      </graphic>
                   </MFXButton>
                </children>
@@ -36,12 +36,12 @@
                <children>
                   <MFXButton fx:id="btnImprimir" buttonType="RAISED" text="Imprimir">
                      <graphic>
-                        <MaterialDesignIconView glyphName="PRINTER" size="24" />
+                        <MaterialDesignIconView fill="WHITE" glyphName="PRINTER" size="24" />
                      </graphic>
                   </MFXButton>
                   <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="10.0" layoutY="10.0" text="Atrás">
                      <graphic>
-                        <MaterialDesignIconView glyphName="ARROW_LEFT" size="24" />
+                        <MaterialDesignIconView fill="WHITE" glyphName="ARROW_LEFT" size="24" />
                      </graphic>
                   </MFXButton>
                </children>

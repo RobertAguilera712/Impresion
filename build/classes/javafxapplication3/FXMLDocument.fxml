@@ -16,7 +16,7 @@
             <Label fx:id="titleLabel" layoutX="15.0" layoutY="11.0" styleClass="h1" text="Selecciona el archivo a imprimir" />
             <MFXButton fx:id="btnAtras" buttonType="RAISED" layoutX="15.0" layoutY="11.0" text="Atrás">
                <graphic>
-                  <MaterialDesignIconView glyphName="ARROW_LEFT" size="24" />
+                  <MaterialDesignIconView fill="WHITE" glyphName="ARROW_LEFT" size="24" />
                </graphic>
             </MFXButton>
             <Label fx:id="pathLabel" layoutX="35.0" layoutY="57.0" text="Label" />

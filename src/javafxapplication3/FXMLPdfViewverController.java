@@ -202,6 +202,7 @@ public class FXMLPdfViewverController implements Initializable {
             }
         });
         btnImprimir.setOnAction((event) -> {
+            
             popup.show(pane.getScene().getWindow());
         });
         viewerGroup.visibleProperty().bind(progressVbox.visibleProperty().not());
@@ -212,7 +213,7 @@ public class FXMLPdfViewverController implements Initializable {
         titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
 
         Label creditoLabel = new Label();
-        creditoLabel.getStyleClass().add("h3");
+        creditoLabel.getStyleClass().add("credito");
         pane.getChildren().add(creditoLabel);
         creditoLabel.layoutXProperty().bind(pane.widthProperty().subtract(creditoLabel.widthProperty()).subtract(40));
         creditoLabel.layoutYProperty().bind(pane.heightProperty().subtract(creditoLabel.heightProperty()).subtract(20));

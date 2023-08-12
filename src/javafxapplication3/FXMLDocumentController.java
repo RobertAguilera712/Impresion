@@ -132,7 +132,7 @@ public class FXMLDocumentController implements Initializable {
         scrollPane.maxHeightProperty().bind(pane.heightProperty().subtract(100));
 
         Label creditoLabel = new Label();
-        creditoLabel.getStyleClass().add("h3");
+        creditoLabel.getStyleClass().add("credito");
         pane.getChildren().add(creditoLabel);
         creditoLabel.layoutXProperty().bind(pane.widthProperty().subtract(creditoLabel.widthProperty()).subtract(20));
         creditoLabel.layoutYProperty().bind(pane.heightProperty().subtract(creditoLabel.heightProperty()).subtract(20));
