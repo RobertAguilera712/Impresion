@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<Pane
+        fx:id="pane"
+        prefWidth="640.0"
+        prefHeight="360.0"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="javafxapplication3.FXMLScannerController">
+    <stylesheets>
+        <URL value="@/javafxapplication3/css/icons.css" />
+        <URL value="@/javafxapplication3/css/styles.css" />
+    </stylesheets>
+    <children>
+        <Label
+                fx:id="titleLabel"
+                layoutX="${(pane.width - titleLabel.width) / 2}"
+                layoutY="15"
+                styleClass="h1"
+                text="Escanear documento" />
+
+        <MFXButton
+                fx:id="btnAtras"
+                buttonType="RAISED"
+                layoutX="${pane.width - btnAtras.width - 20}"
+                layoutY="11.0"
+                text="Atrás">
+            <graphic>
+                <MaterialDesignIconView
+                        fill="WHITE"
+                        glyphName="ARROW_LEFT"
+                        size="24" />
+            </graphic>
+        </MFXButton>
+
+        <ImageView
+                fx:id="previewIv"
+                layoutX="${(pane.width - previewIv.fitWidth) * 0.15}"
+                layoutY="80"
+                fitWidth="150"
+                fitHeight="150"
+                pickOnBounds="true"
+                preserveRatio="true" />
+
+        <ListView
+                fx:id="listView"
+                focusTraversable="false"
+                prefHeight="500.0"
+                prefWidth="300.0"
+                layoutX="${previewIv.layoutX + previewIv.fitWidth + 20}"
+                layoutY="80.0" />
+
+        <VBox
+                fx:id="infoVbox"
+                layoutX="${listView.layoutX + listView.width + 20}"
+                layoutY="80"
+                spacing="8.0">
+            <children>
+                <Label
+                        fx:id="pagsLabel"
+                        text="Label" />
+                <Label
+                        fx:id="precioLabel"
+                        text="Label" />
+                <Label
+                        fx:id="totalLabel"
+                        text="Label" />
+                <Label
+                        fx:id="faltanteLabel"
+                        text="Label" />
+                <Label
+                        fx:id="cambioLabel"
+                        text="Label" />
+            </children>
+        </VBox>
+
+
+        <Label
+                fx:id="errorLabel"
+                layoutX="${(pane.width - errorLabel.width) / 2}"
+                layoutY="${pane.height - errorLabel.height - 60}"
+                text="Ingresa el importe total antes de guardar tu documento"
+                textFill="RED"
+                visible="false" />
+
+        <HBox
+                fx:id="btnsHbox"
+                spacing="10"
+                layoutX="${(pane.width - btnsHbox.width) / 2}"
+                layoutY="${pane.height - btnsHbox.height - 30}">
+
+            <MFXButton
+                    fx:id="scanBtn"
+                    buttonType="RAISED"
+                    text="Escanear" />
+            <MFXButton
+                    fx:id="addPageBtn"
+                    buttonType="RAISED"
+                    text="Agregar página" />
+
+            <MFXButton
+                    fx:id="saveBtn"
+                    buttonType="RAISED"
+                    text="Guardar" />
+        </HBox>
+
+
+    </children>
+</Pane>

@@ -8,13 +8,15 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="AutoImprimir.jar" size="65253" download="eager" />
+    <jar href="AutoImprimir.jar" size="2052968" download="eager" />
     <jar href="lib\adapter-0.2.0.jar" size="12415" download="eager" />
+    <jar href="lib\bridj-0.7.0.jar" size="935929" download="eager" />
     <jar href="lib\commons-io-2.13.0-javadoc.jar" size="3041789" download="eager" />
     <jar href="lib\commons-io-2.13.0-sources.jar" size="507231" download="eager" />
     <jar href="lib\commons-io-2.13.0-test-sources.jar" size="496950" download="eager" />
     <jar href="lib\commons-io-2.13.0-tests.jar" size="874444" download="eager" />
     <jar href="lib\commons-io-2.13.0.jar" size="483954" download="eager" />
+    <jar href="lib\core-3.0.0.jar" size="538199" download="eager" />
     <jar href="lib\documents4j-api-1.0.3.jar" size="11144" download="eager" />
     <jar href="lib\documents4j-local-1.0.3.jar" size="12419" download="eager" />
     <jar href="lib\documents4j-transformer-1.0.3.jar" size="10856" download="eager" />
@@ -27,12 +29,32 @@
     <jar href="lib\fontawesomefx-8.9.jar" size="571068" download="eager" />
     <jar href="lib\guava-18.0.jar" size="2256213" download="eager" />
     <jar href="lib\jSerialComm-2.10.2.jar" size="868797" download="eager" />
+    <jar href="lib\javase-3.0.0.jar" size="38898" download="eager" />
+    <jar href="lib\javax.servlet-api-3.1.0.jar" size="95806" download="eager" />
+    <jar href="lib\jetty-client-9.4.48.v20220622.jar" size="325897" download="eager" />
+    <jar href="lib\jetty-http-9.4.48.v20220622.jar" size="234754" download="eager" />
+    <jar href="lib\jetty-io-9.4.48.v20220622.jar" size="183018" download="eager" />
+    <jar href="lib\jetty-security-9.4.48.v20220622.jar" size="118511" download="eager" />
+    <jar href="lib\jetty-server-9.4.48.v20220622.jar" size="732200" download="eager" />
+    <jar href="lib\jetty-servlet-9.4.48.v20220622.jar" size="146081" download="eager" />
+    <jar href="lib\jetty-util-9.4.48.v20220622.jar" size="582975" download="eager" />
+    <jar href="lib\jetty-util-ajax-9.4.48.v20220622.jar" size="66654" download="eager" />
+    <jar href="lib\jetty-webapp-9.4.48.v20220622.jar" size="140320" download="eager" />
+    <jar href="lib\jetty-xml-9.4.48.v20220622.jar" size="68301" download="eager" />
     <jar href="lib\jfoenix-8.0.10.jar" size="2710207" download="eager" />
     <jar href="lib\materialfx-11.13.5.jar" size="3226858" download="eager" />
     <jar href="lib\pdfbox-app-2.0.28.jar" size="10085495" download="eager" />
+    <jar href="lib\qrgen-1.4.jar" size="7194" download="eager" />
     <jar href="lib\slf4j-api-1.7.13.jar" size="33088" download="eager" />
+    <jar href="lib\spark-core-2.9.4.jar" size="162373" download="eager" />
     <jar href="lib\usbdrivedetector-2.2.1.jar" size="37374" download="eager" />
     <jar href="lib\virtualizedfx-11.2.6.1.jar" size="64010" download="eager" />
+    <jar href="lib\webcam-capture-0.3.12.jar" size="428314" download="eager" />
+    <jar href="lib\websocket-api-9.4.48.v20220622.jar" size="52173" download="eager" />
+    <jar href="lib\websocket-client-9.4.48.v20220622.jar" size="45622" download="eager" />
+    <jar href="lib\websocket-common-9.4.48.v20220622.jar" size="214632" download="eager" />
+    <jar href="lib\websocket-server-9.4.48.v20220622.jar" size="45510" download="eager" />
+    <jar href="lib\websocket-servlet-9.4.48.v20220622.jar" size="30315" download="eager" />
     <jar href="lib\zt-exec-1.8.jar" size="48461" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="AutoImprimir" >

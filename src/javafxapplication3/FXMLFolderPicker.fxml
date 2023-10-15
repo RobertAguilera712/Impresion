@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+
+<Pane
+        fx:id="pane"
+        prefHeight="360.0"
+        prefWidth="640.0"
+        styleClass="mainFxmlClass"
+        xmlns:fx="http://javafx.com/fxml/1"
+        xmlns="http://javafx.com/javafx/8.0.171"
+        fx:controller="javafxapplication3.FXMLFolderPickerController">
+    <stylesheets>
+        <URL value="@/javafxapplication3/css/styles.css" />
+    </stylesheets>
+
+    <children>
+        <Label
+                fx:id="titleLabel"
+                layoutX="${(pane.width - titleLabel.width) / 2}"
+                layoutY="11.0"
+                styleClass="h3"
+                text="Selecciona la carpeta para guardar tu archivo" />
+        <MFXButton
+                fx:id="btnAtras"
+                buttonType="RAISED"
+                layoutX="${pane.width - btnAtras.width - 20}"
+                layoutY="11.0"
+                text="Atrás">
+            <graphic>
+                <MaterialDesignIconView
+                        fill="WHITE"
+                        glyphName="ARROW_LEFT"
+                        size="24" />
+            </graphic>
+        </MFXButton>
+        <Label
+                fx:id="pathLabel"
+                layoutX="${(pane.width - pathLabel.width) / 2}"
+                layoutY="57.0"
+                text="Label" />
+        <MFXScrollPane
+                fx:id="scrollPane"
+                fitToHeight="true"
+                fitToWidth="true"
+                hbarPolicy="NEVER"
+                layoutX="35.0"
+                layoutY="82.0"
+                maxHeight="230"
+                maxWidth="${pane.width - 40}"
+                minHeight="230"
+                minWidth="${pane.width - 40}">
+            <content>
+                <FlowPane
+                        fx:id="flowPane"
+                        alignment="TOP_CENTER"
+                        columnHalignment="CENTER"
+                        hgap="20.0"
+                        prefWrapLength="0.0"
+                        vgap="20.0">
+                    <padding>
+                        <Insets
+                                bottom="20.0"
+                                left="20.0"
+                                right="20.0"
+                                top="20.0" />
+                    </padding>
+                </FlowPane>
+            </content>
+        </MFXScrollPane>
+
+        <HBox
+                fx:id="buttonsHbox"
+                layoutX="${(pane.width - buttonsHbox.width) / 2}"
+                layoutY="320"
+                spacing="10.0">
+            <children>
+                <MFXButton
+                        fx:id="btnGuardar"
+                        buttonType="RAISED"
+                        text="Guardar">
+                </MFXButton>
+            </children>
+        </HBox>
+    </children>
+</Pane>

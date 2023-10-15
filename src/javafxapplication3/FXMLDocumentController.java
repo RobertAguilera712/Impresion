@@ -1,8 +1,17 @@
 package javafxapplication3;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -11,7 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardWatchEventKinds;
+import java.nio.file.WatchEvent;
+import java.nio.file.WatchKey;
+import java.nio.file.WatchService;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,6 +38,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -37,7 +56,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCharacterCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -51,8 +72,13 @@ import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javax.imageio.ImageIO;
+import net.glxn.qrgen.QRCode;
+import net.glxn.qrgen.image.ImageType;
 import net.samuelcampos.usbdrivedetector.USBDeviceDetectorManager;
 import net.samuelcampos.usbdrivedetector.events.DeviceEventType;
+import net.samuelcampos.usbdrivedetector.events.IUSBDriveListener;
+import net.samuelcampos.usbdrivedetector.events.USBStorageEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
@@ -88,23 +114,29 @@ public class FXMLDocumentController implements Initializable {
     private File currentFolder;
     private Label vacioLabel;
     BooleanProperty hasParent = new SimpleBooleanProperty(false);
-    USBDeviceDetectorManager driveDetector = new USBDeviceDetectorManager();
+
     @FXML
     private Group filesGroup;
-    @FXML
-    private Label usbLabel;
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        driveDetector.addDriveListener((usbse) -> {
+    @FXML
+    private VBox emptyVbox;
+    @FXML
+    private ImageView qrImage;
+
+    public IUSBDriveListener listener = new IUSBDriveListener() {
+        @Override
+        public void usbDriveEvent(USBStorageEvent usbse) {
             if (usbse.getEventType() == DeviceEventType.CONNECTED) {
                 Platform.runLater(() -> {
-                    listFiles(usbse.getStorageDevice().getRootDirectory());
+                    JavaFXApplication3.UsbRootFile = usbse.getStorageDevice().getRootDirectory();
+                    listFiles(JavaFXApplication3.UsbRootFile);
                 });
+                // USB REMOVED
             } else {
                 Platform.runLater(() -> {
                     try {
-                        usbLabel.visibleProperty().set(true);
+                        JavaFXApplication3.UsbRootFile = null;
+                        emptyVbox.visibleProperty().set(true);
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                         Parent root = loader.load();
                         FXMLDocumentController documentController = loader.getController();
@@ -115,11 +147,66 @@ public class FXMLDocumentController implements Initializable {
                     }
                 });
             }
+        }
+
+    };
+
+    @FXML
+    private MFXButton ScanBtn;
+    @FXML
+    private ImageView redQrImage;
+
+//    private static void fireFileCreatedEvent(Path createdFilePath) {
+//        // Here, you can implement your own logic to handle the file creation event
+//        // For example, you can trigger callbacks, update UI, etc.
+//        System.out.println("File created event: " + createdFilePath);
+//    }
+    private void watchForFileCreation(Path directoryToWatch) throws IOException, InterruptedException {
+        WatchService watchService = FileSystems.getDefault().newWatchService();
+        directoryToWatch.register(watchService, StandardWatchEventKinds.ENTRY_CREATE);
+
+        while (true) {
+            WatchKey key = watchService.take();
+
+            for (WatchEvent<?> event : key.pollEvents()) {
+                WatchEvent.Kind<?> kind = event.kind();
+
+                if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                    currentFolder = new File("uploads");
+                    Platform.runLater(() -> {
+                        ListFilesInDir(currentFolder);
+                    });
+//                    Path createdFilePath = (Path) event.context();
+//                    fireFileCreatedEvent(createdFilePath);
+                }
+            }
+
+            key.reset();
+        }
+    }
+
+    @Override
+
+    public void initialize(URL url, ResourceBundle rb) {
+        Path directoryToWatch = Paths.get("uploads");
+        // Create a new thread for handling events
+        Thread eventHandlerThread = new Thread(() -> {
+            try {
+                watchForFileCreation(directoryToWatch);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         });
+        eventHandlerThread.setDaemon(true);
+        // Start the event handler thread
+        eventHandlerThread.start();
+
+        JavaFXApplication3.listener = listener;
+        JavaFXApplication3.driveDetector.addDriveListener(listener);
         titleLabel.layoutXProperty().bind(pane.widthProperty().subtract(titleLabel.widthProperty()).divide(2));
-        usbLabel.layoutXProperty().bind(pane.widthProperty().subtract(usbLabel.widthProperty()).divide(2));
-        usbLabel.layoutYProperty().bind(pane.heightProperty().subtract(usbLabel.heightProperty()).divide(2));
-        filesGroup.visibleProperty().bind(usbLabel.visibleProperty().not());
+
+        filesGroup.visibleProperty().bind(emptyVbox.visibleProperty().not());
+
         vacioLabel = new Label("Esta carpeta está vacía");
         vacioLabel.getStyleClass().add("h2");
         btnAtras.layoutXProperty().bind(pane.widthProperty().subtract(btnAtras.widthProperty()).subtract(20));
@@ -127,8 +214,8 @@ public class FXMLDocumentController implements Initializable {
         btnAtras.setOnAction((event) -> {
             listFiles(currentFolder.getParentFile());
         });
-        scrollPane.minWidthProperty().bind(pane.widthProperty().subtract(40));
         pathLabel.minWidthProperty().bind(pane.widthProperty().subtract(40));
+        scrollPane.minWidthProperty().bind(pane.widthProperty().subtract(40));
         scrollPane.maxHeightProperty().bind(pane.heightProperty().subtract(100));
 
         Label creditoLabel = new Label();
@@ -137,6 +224,57 @@ public class FXMLDocumentController implements Initializable {
         creditoLabel.layoutXProperty().bind(pane.widthProperty().subtract(creditoLabel.widthProperty()).subtract(20));
         creditoLabel.layoutYProperty().bind(pane.heightProperty().subtract(creditoLabel.heightProperty()).subtract(20));
         creditoLabel.textProperty().bind(JavaFXApplication3.credito.asString("Crédito: $%d"));
+
+        String nombreRed = JavaFXApplication3.getNombreRed();
+        String passwordRed = JavaFXApplication3.getPasswordRed();
+        String networkInfo = "WIFI:S:" + nombreRed + ";T:WPA;P:" + passwordRed + ";;";
+
+        File qrStream = QRCode.from(JavaFXApplication3.webAppAdress).withSize(200, 200).file();
+        qrImage.setImage(new Image("file:" + qrStream.getAbsolutePath()));
+
+        File qrRedStream = QRCode.from(networkInfo).withSize(200, 200).file();
+        redQrImage.setImage(new Image("file:" + qrRedStream.getAbsolutePath()));
+
+        KeyCombination keyCombination = new KeyCharacterCombination(",", KeyCombination.CONTROL_DOWN);
+
+        pane.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (keyCombination.match(event)) {
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLLogin.fxml"));
+                    Parent root = loader.load();
+                    Stage stage = JavaFXApplication3.currentStage;
+                    stage.getScene().setRoot(root);
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+
+//        settingsBtn.setOnAction((event) -> {
+//            try {
+//                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLSettings.fxml"));
+//                Parent root = loader.load();
+//                Stage stage = JavaFXApplication3.currentStage;
+//                stage.getScene().setRoot(root);
+//            } catch (IOException ex) {
+//                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//        });
+        ScanBtn.setOnAction((event) -> {
+            try {
+
+                JavaFXApplication3.listener = null;
+                JavaFXApplication3.driveDetector.removeDriveListener(listener);
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLScanner.fxml"));
+                Parent root = loader.load();
+                Stage stage = JavaFXApplication3.currentStage;
+                stage.getScene().setRoot(root);
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
     }
 
     public void ListFilesInDir(File dir) {
@@ -158,7 +296,7 @@ public class FXMLDocumentController implements Initializable {
         for (File f : files) {
             flowPane.getChildren().add(generarItemGrid(f));
         }
-        usbLabel.visibleProperty().set(false);
+        emptyVbox.visibleProperty().set(false);
     }
 
     private GridPane generarItemGrid(File file) {

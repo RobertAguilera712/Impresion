@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+          href="bootstrap-5/css/bootstrap.min.css">
+    <title>Subir archivos</title>
+
+    <style>
+        input.hidden {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            border: none;
+            position: absolute;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container my-5">
+        <h1 class="text-center">Sube tus archivos</h1>
+        <form action="/upload"
+              method="post"
+              enctype="multipart/form-data">
+            <input type="file"
+                   name="file1"
+                   id="file1"
+                   accept=".pdf,.doc,.docx"
+                   class="hidden"
+                   multiple>
+            <div class="mb-3 d-flex flex-wrap align-items-start"
+                 id="files-container">
+                <label for="file1"
+                       id="agregarBtn"
+                       class="btn btn-primary align-self-center">Agregar archivos</label>
+                <template id="file-template">
+                    <div class="file-container d-flex flex-column justify-content-center align-items-center p-3"
+                         style="max-width: 150px;">
+                        <img src=""
+                             height="100px">
+                        <label for=""
+                               style="max-width: 150px; word-break: break-all;"></label>
+                    </div>
+                </template>
+            </div>
+
+            <div class="d-grid gap-2">
+                <button type="submit"
+                        class="btn btn-primary">Subir archivos</button>
+            </div>
+        </form>
+    </div>
+    <script src="bootstrap-5/js/bootstrap.min.js"></script>
+    <script src="js/jquery-3.7.0.min.js"></script>
+    <script src="js/sweetalert2.all.min.js"></script>
+    <script src="js/loadingoverlay.min.js"></script>
+    <script>
+        const mimetypes = {
+            'application/pdf': 'img/pdf.png',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'img/word.png'
+        }
+        const filesAdded = [];
+        const filesContainer = document.getElementById('files-container');
+        const agregarBtn = document.getElementById('agregarBtn');
+        document.getElementById('file1').addEventListener('change', (e) => {
+            const files = e.target.files;
+            for (const file of files) {
+                if (filesAdded.includes(file.name)) continue;
+                filesAdded.push(file.name);
+                const fileTemplate = document.getElementById('file-template').content.firstElementChild.cloneNode(true);
+                const img = mimetypes[file.type];
+                fileTemplate.querySelector('img').setAttribute('src', img);
+                fileTemplate.querySelector('label').textContent = file.name;
+                filesContainer.insertBefore(fileTemplate, agregarBtn);
+            }
+        });
+        document.querySelector('form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (filesAdded.length == 0){
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'No has seleccionado ningún archivo',
+                });
+            }
+            const formData = new FormData(e.target);
+            $.LoadingOverlay("show");
+            const response = await $.ajax({
+                url: '/upload',
+                dataType: 'json', // added data type
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+            });
+            $.LoadingOverlay("hide");
+            if (response.codigo == 200) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Archivos transferidos',
+                    text: 'Los archivos seleccionados se han transferido con éxito',
+                });
+                window.location.reload();
+            } else {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Error al subir archivos',
+                    text: 'Ocurrió un error al transferir tus archivos. Intenta de nuevo',
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

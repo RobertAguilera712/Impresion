@@ -1,5 +1,6 @@
 package javafxapplication3;
 
+import com.jfoenix.controls.JFXAlert;
 import com.sun.javafx.scene.control.skin.VirtualFlow;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXListView;
@@ -104,7 +105,7 @@ public class FXMLPdfViewverController implements Initializable {
     private LoadPdfTask loadPdfTask;
     private WordToPdfTask wordToPdfTask;
     BooleanProperty loading = new SimpleBooleanProperty(false);
-    private Popup popup;
+    private JFXAlert<Void> alert;
 
     public void setPdf(File pdf) {
         try {
@@ -114,13 +115,14 @@ public class FXMLPdfViewverController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLImprimir.fxml"));
             Parent root = loader.load();
             FXMLImprimirController imprimirController = loader.getController();
-            popup = new Popup();
+            this.alert = new JFXAlert<>(JavaFXApplication3.currentStage);
             imprimirController.setPdf(pdf);
             imprimirController.setCancelar((event) -> {
-                popup.hide();
+                alert.close();
             });
-            popup.centerOnScreen();
-            popup.getContent().add(root);
+            this.alert.setOverlayClose(false);
+		this.alert.setContent(root);
+
         } catch (IOException ex) {
             Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -202,8 +204,7 @@ public class FXMLPdfViewverController implements Initializable {
             }
         });
         btnImprimir.setOnAction((event) -> {
-            
-            popup.show(pane.getScene().getWindow());
+            alert.show();
         });
         viewerGroup.visibleProperty().bind(progressVbox.visibleProperty().not());
         progressVbox.layoutXProperty().bind(pane.widthProperty().subtract(progressVbox.widthProperty()).divide(2));

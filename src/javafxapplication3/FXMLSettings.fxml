@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import com.jfoenix.controls.*?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.scene.image.ImageView?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<Pane
+        fx:id="pane"
+        prefHeight="400.0"
+        prefWidth="600.0"
+        styleClass="mainFxmlClass"
+        xmlns="http://javafx.com/javafx/8.0.171"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="javafxapplication3.FXMLSettingsController">
+    <stylesheets>
+        <URL value="@/javafxapplication3/css/styles.css" />
+    </stylesheets>
+    <children>
+        <Label
+                fx:id="titleLabel"
+                layoutX="${(pane.width - titleLabel.width) / 2}"
+                layoutY="15"
+                styleClass="h1"
+                text="Configuraciones" />
+
+
+        <MFXButton
+                fx:id="btnAtras"
+                buttonType="RAISED"
+                layoutX="${pane.width - btnAtras.width - 20}"
+                layoutY="11.0"
+                text="Atrás">
+            <graphic>
+                <MaterialDesignIconView
+                        fill="WHITE"
+                        glyphName="ARROW_LEFT"
+                        size="24" />
+            </graphic>
+        </MFXButton>
+
+
+        <VBox
+                fx:id="settingsVbox"
+                layoutX="${(pane.width - settingsVbox.width) / 2}"
+                layoutY="80"
+                spacing="20.0">
+            <HBox
+                    fx:id="precioBn"
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Precio impresión a blanco y negro: "
+                            styleClass="h3" />
+                    <HBox
+                            alignment="CENTER"
+                            spacing="10.0">
+                        <children>
+                            <MFXButton
+                                    fx:id="lessBnBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="MINUS" />
+                                </graphic>
+                            </MFXButton>
+                            <Label
+                                    fx:id="precioBnLabel"
+                                    text="Label" />
+                            <MFXButton
+                                    fx:id="plusBnBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="PLUS" />
+                                </graphic>
+                            </MFXButton>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+            <HBox
+                    fx:id="precioColor"
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Precio impresión a color: "
+                            styleClass="h3" />
+                    <HBox
+                            alignment="CENTER"
+                            spacing="10.0">
+                        <children>
+                            <MFXButton
+                                    fx:id="lessColorBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="MINUS" />
+                                </graphic>
+                            </MFXButton>
+                            <Label
+                                    fx:id="precioColorLabel"
+                                    text="Label" />
+                            <MFXButton
+                                    fx:id="plusColorBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="PLUS" />
+                                </graphic>
+                            </MFXButton>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+            <HBox
+                    fx:id="precioCopiaBn"
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Precio copiado a blanco y negro: "
+                            styleClass="h3" />
+                    <HBox
+                            alignment="CENTER"
+                            spacing="10.0">
+                        <children>
+                            <MFXButton
+                                    fx:id="lessCopiaBnBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="MINUS" />
+                                </graphic>
+                            </MFXButton>
+                            <Label
+                                    fx:id="precioCopiaBnLabel"
+                                    text="Label" />
+                            <MFXButton
+                                    fx:id="plusCopiaBnBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="PLUS" />
+                                </graphic>
+                            </MFXButton>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+            <HBox
+                    fx:id="precioCopiaColor"
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Precio copiado a color: "
+                            styleClass="h3" />
+                    <HBox
+                            alignment="CENTER"
+                            spacing="10.0">
+                        <children>
+                            <MFXButton
+                                    fx:id="lessCopiaColorBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="MINUS" />
+                                </graphic>
+                            </MFXButton>
+                            <Label
+                                    fx:id="precioCopiaColorLabel"
+                                    text="Label" />
+                            <MFXButton
+                                    fx:id="plusCopiaColorBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="PLUS" />
+                                </graphic>
+                            </MFXButton>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+            <HBox
+                    fx:id="precioEscaneo"
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Precio escaneo: "
+                            styleClass="h3" />
+                    <HBox
+                            alignment="CENTER"
+                            spacing="10.0">
+                        <children>
+                            <MFXButton
+                                    fx:id="lessEscaneoBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="MINUS" />
+                                </graphic>
+                            </MFXButton>
+                            <Label
+                                    fx:id="precioEscaneoLabel"
+                                    text="Label" />
+                            <MFXButton
+                                    fx:id="plusEscaneoBtn"
+                                    buttonType="RAISED"
+                                    contentDisplay="GRAPHIC_ONLY">
+                                <graphic>
+                                    <FontAwesomeIconView
+                                            fill="WHITE"
+                                            glyphName="PLUS" />
+                                </graphic>
+                            </MFXButton>
+                        </children>
+                    </HBox>
+                </children>
+            </HBox>
+
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Pantalla completa: "
+                            styleClass="h3" />
+                    <JFXComboBox
+                            fx:id="pantallaCombo"
+                            HBox.hgrow="ALWAYS" />
+                </children>
+            </HBox>
+
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Contraseña: "
+                            styleClass="h3" />
+                    <JFXPasswordField
+                            maxWidth="-Infinity"
+                            minWidth="-Infinity"
+                            prefWidth="200.0"
+                            promptText="Contraseña"
+                            fx:id="passwordField" />
+                </children>
+
+            </HBox>
+
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Nombre de red: "
+                            styleClass="h3" />
+                    <JFXTextField
+                            maxWidth="-Infinity"
+                            minWidth="-Infinity"
+                            prefWidth="200.0"
+                            promptText="Nombre de red"
+                            fx:id="redTextField" />
+                </children>
+
+            </HBox>
+
+            <HBox
+                    alignment="CENTER_LEFT"
+                    spacing="10.0">
+                <children>
+                    <Label
+                            text="Contraseña de red: "
+                            styleClass="h3" />
+                    <JFXPasswordField
+                            maxWidth="-Infinity"
+                            minWidth="-Infinity"
+                            prefWidth="200.0"
+                            promptText="Contraseña de red"
+                            fx:id="redPasswordField" />
+                </children>
+
+            </HBox>
+
+        </VBox>
+
+
+        <MFXButton
+                fx:id="guardarBtn"
+                layoutX="${(pane.width - guardarBtn.width) / 2}"
+                layoutY="${settingsVbox.layoutY + settingsVbox.height + 20}"
+                buttonType="RAISED"
+                text="Guardar" />
+    </children>
+</Pane>

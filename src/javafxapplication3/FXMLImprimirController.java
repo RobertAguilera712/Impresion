@@ -8,6 +8,9 @@ package javafxapplication3;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import com.sun.deploy.util.StringUtils;
+import gui.Alerts.AlertIcon;
+import gui.Alerts.ConfirmationAlert;
+import gui.Alerts.WaitAlert;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXComboBox;
 import io.github.palexdev.materialfx.controls.MFXRadioButton;
@@ -27,6 +30,7 @@ import java.util.stream.Stream;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -40,6 +44,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -105,10 +110,12 @@ public class FXMLImprimirController implements Initializable {
     private Label cambioLabel;
     @FXML
     private Label precioLabel;
+    
     private IntegerProperty precioProperty = new SimpleIntegerProperty(JavaFXApplication3.precioBlancoNegro);
     private IntegerProperty totalProperty = new SimpleIntegerProperty();
     private IntegerProperty faltanteProperty = new SimpleIntegerProperty();
     private IntegerProperty cambioProperty = new SimpleIntegerProperty();
+    
     private IntegerProperty paginasProperty = new SimpleIntegerProperty(0);
     private IntegerProperty allPaginasProperty = new SimpleIntegerProperty(0);
     private IntegerProperty paginasRangeProperty = new SimpleIntegerProperty(0);
@@ -121,13 +128,13 @@ public class FXMLImprimirController implements Initializable {
     private Label copiasTotalLabel;
     @FXML
     private Label errorLabel;
-    private StackPane stackPane;
+
     @FXML
-    private VBox promtVbox;
+    private Pane pane;
     @FXML
-    private MFXButton seguirBtn;
+    private VBox optionsVbox;
     @FXML
-    private MFXButton noSeguirBtn;
+    private VBox infoVbox;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -170,22 +177,6 @@ public class FXMLImprimirController implements Initializable {
             }
         });
 
-        seguirBtn.setOnAction((event) -> {
-            int nuevoCredito = JavaFXApplication3.credito.get() - totalProperty.get();
-            JavaFXApplication3.setCredito(nuevoCredito);
-            promtVbox.setVisible(false);
-            mostrarPantallaPrincipal();
-            cancelarBtn.fire();
-        });
-
-        noSeguirBtn.setOnAction((event) -> {
-            promtVbox.setVisible(false);
-            JavaFXApplication3.darCambio((byte) cambioProperty.get());
-            JavaFXApplication3.setCredito(0);
-            mostrarPantallaPrincipal();
-            cancelarBtn.fire();
-        });
-
         errorLabel.visibleProperty().bind(faltanteProperty.lessThanOrEqualTo(0).not());
 
         creditoLabel.getStyleClass().add("h3");
@@ -193,6 +184,7 @@ public class FXMLImprimirController implements Initializable {
         totalLabel.getStyleClass().add("h3");
         faltanteLabel.getStyleClass().add("h3");
         cambioLabel.getStyleClass().add("h3");
+        
         pagsLabel.getStyleClass().add("h3");
         copiasTotalLabel.getStyleClass().add("h3");
 
@@ -204,6 +196,7 @@ public class FXMLImprimirController implements Initializable {
         totalLabel.textProperty().bind(totalProperty.asString("Total: $%d"));
         faltanteLabel.textProperty().bind(faltanteProperty.asString("Faltante: $%d"));
         cambioLabel.textProperty().bind(cambioProperty.asString("Cambio: $%d"));
+        
         pagsLabel.textProperty().bind(paginasProperty.asString("Páginas a imprimir: %d"));
         copiasTotalLabel.textProperty().bind(copias.multiply(paginasProperty).asString("Totoal de copias a imprir: %d"));
 
@@ -279,6 +272,7 @@ public class FXMLImprimirController implements Initializable {
         if (faltanteProperty.get() > 0) {
             return;
         }
+        cancelarBtn.fire();
 
         PrintService defaultPrintService = PrintServiceLookup.lookupDefaultPrintService();
         PrinterJob printJob = PrinterJob.getPrinterJob();
@@ -309,9 +303,47 @@ public class FXMLImprimirController implements Initializable {
 
         printJob.setPageable(new PDFPageable(document));
         printJob.setPrintService(defaultPrintService);
-        printJob.print(attributeSet);
 
-        promtVbox.setVisible(true);
+        Task<Void> printTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                printJob.print(attributeSet);// Start the printing process
+                return null;
+            }
+        };
+        
+        WaitAlert waitAlert = new WaitAlert(AlertIcon.WARNING, JavaFXApplication3.currentStage);
+        waitAlert.setTitle("Imprimiendo documento");
+        waitAlert.setTextContent("Tu documento se está imprimiendo. Espera un momento");
+
+        printTask.setOnSucceeded(event -> {
+            System.out.println("Printing completed.");
+            waitAlert.Close();
+            ConfirmationAlert alert = new ConfirmationAlert(AlertIcon.QUESTION, JavaFXApplication3.currentStage);
+            alert.setTitle("¿Seguir imprimiendo?");
+            alert.setTextContent("¿Quieres continuar imprimiendo?");
+            alert.setConfirmationButtonText("Si");
+            alert.setConfirmationButtonAction((e) -> {
+                int nuevoCredito = JavaFXApplication3.credito.get() - totalProperty.get();
+                JavaFXApplication3.credito.set(nuevoCredito);
+            });
+            alert.setCancellationButtonText("No");
+            alert.setCancellationButtonAction((e) -> {
+                JavaFXApplication3.darCambio((byte) cambioProperty.get());
+                JavaFXApplication3.credito.set(0);
+                mostrarPantallaPrincipal();
+                cancelarBtn.fire();
+            });
+            alert.showAndWait();
+            // Perform additional actions after printing completes
+        });
+        
+        waitAlert.Show();
+
+        new Thread(printTask).start();
+        
+        
+
     }
 
 }

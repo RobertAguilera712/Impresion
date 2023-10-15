@@ -3,13 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLPdfViewver.fxml</file>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLDocumentController.java</file>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLImprimirController.java</file>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLPdfViewverController.java</file>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/css/styles.css</file>
+            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/webapp/WebApp.java</file>
+            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLScannerController.java</file>
             <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/JavaFXApplication3.java</file>
-            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/build.xml</file>
+            <file>file:/C:/Users/Kasparov/Documents/NetBeansProjects/JavaFXApplication3/src/javafxapplication3/FXMLFolderPickerController.java</file>
         </group>
     </open-files>
 </project-private>

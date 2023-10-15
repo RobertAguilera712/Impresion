@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import io.github.palexdev.materialfx.controls.MFXButton?>
+<?import java.net.URL?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
+
+<Pane
+        fx:id="pane"
+        prefHeight="400.0"
+        prefWidth="600.0"
+        xmlns="http://javafx.com/javafx/8.0.171"
+        xmlns:fx="http://javafx.com/fxml/1"
+        fx:controller="javafxapplication3.FXMLLoginController">
+
+    <stylesheets>
+        <URL value="@/javafxapplication3/css/icons.css" />
+        <URL value="@/javafxapplication3/css/styles.css" />
+    </stylesheets>
+
+    <children>
+
+        <Label
+                fx:id="titleLabel"
+                layoutX="${(pane.width - titleLabel.width) / 2}"
+                layoutY="15"
+                styleClass="h1"
+                text="Login" />
+
+
+        <MFXButton
+                fx:id="btnAtras"
+                buttonType="RAISED"
+                layoutX="${pane.width - btnAtras.width - 20}"
+                layoutY="11.0"
+                text="Atrás">
+            <graphic>
+                <MaterialDesignIconView
+                        fill="WHITE"
+                        glyphName="ARROW_LEFT"
+                        size="24" />
+            </graphic>
+        </MFXButton>
+
+        <VBox
+                fx:id="vbox"
+                layoutX="${(pane.width - vbox.width) / 2}"
+                layoutY="${(pane.height - vbox.height) / 2}"
+                alignment="CENTER"
+                spacing="25.0">
+            <children>
+
+                <ImageView
+                        fitHeight="200"
+                        fitWidth="200"
+                        pickOnBounds="true"
+                        preserveRatio="true">
+                    <image>
+                        <Image url="@icons/login.png" />
+                    </image>
+                </ImageView>
+                <JFXPasswordField
+                        maxWidth="-Infinity"
+                        minWidth="-Infinity"
+                        prefWidth="200.0"
+                        promptText="Contraseña"
+                        fx:id="passwordField" />
+                <MFXButton
+                        fx:id="loginBtn"
+                        buttonType="RAISED"
+                        text="Entrar" />
+
+
+            </children>
+        </VBox>
+    </children>
+</Pane>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox fx:id="container" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" styleClass="alert-container" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Label fx:id="icon">
+            <styleClass>
+                <String fx:value="alert-icon" />
+                <String fx:value="icon" />
+            </styleClass>
+        </Label>
+        <Label fx:id="txtTitle" styleClass="h1" text="Titulo" />
+        <HBox>
+            <children>
+                <Label fx:id="txtContent" text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor&#10;incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis&#10;nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.&#10;Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu&#10;fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in&#10;culpa qui officia deserunt mollit anim id est laborum." />
+            </children>
+        </HBox>
+    </children>
+    <stylesheets>
+    
+        <URL value="@/javafxapplication3/css/icons.css" />
+        <URL value="@/javafxapplication3/css/styles.css" />
+    </stylesheets>
+</VBox>

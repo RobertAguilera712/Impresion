@@ -7,8 +7,16 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.IntegerProperty;
@@ -20,17 +28,41 @@ import javafx.scene.control.Label;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import net.samuelcampos.usbdrivedetector.USBDeviceDetectorManager;
+import net.samuelcampos.usbdrivedetector.events.IUSBDriveListener;
+import spark.Spark;
+import webapp.WebApp;
+import java.util.prefs.Preferences;
+import javafx.scene.input.KeyCode;
 
 public class JavaFXApplication3 extends Application {
 
     public static IntegerProperty credito = new SimpleIntegerProperty(0);
-    public static int precioBlancoNegro = 1;
-    public static int precioColor = 2;
+    public static int precioBlancoNegro;
+    public static int precioColor;
+    public static int precioScan;
+
+    public static String webAppAdress;
+
+    public static Preferences userPreferences;
 
     public static Stage currentStage;
 
+    public static File UsbRootFile;
+
+    private webapp.WebApp app;
+
     @Override
     public void start(Stage stage) throws Exception {
+        
+      
+
+        userPreferences = Preferences.userRoot().node(this.getClass().getName());
+        precioBlancoNegro = getPrecioBlancoNegro();
+        precioColor = getPrecioColor();
+        precioScan = getPrecioScan();
+
+        getIp();
         currentStage = stage;
         FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
         Parent root = loader.load();
@@ -40,21 +72,204 @@ public class JavaFXApplication3 extends Application {
         String css = getClass().getResource("css/styles.css").toExternalForm();
         scene.getStylesheets().add(css);
 
+        // DELETE
+        scene.setOnKeyPressed((event) -> {
+            if (event.getCode() == KeyCode.C) {
+                credito.set(credito.get() + 1);
+            }
+        });
+
+        app = new WebApp();
+        app.initApp();
         stage.setScene(scene);
 
-        Platform.setImplicitExit(false);
-        stage.setOnCloseRequest((event) -> {
-            event.consume();
-        });
-        stage.setFullScreen(true);
-        stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
-        stage.setFullScreenExitHint("");
-        stage.setResizable(false);
-        stage.setAlwaysOnTop(true);
+        if (getFullScreen()) {
+            Platform.setImplicitExit(false);
+            stage.setOnCloseRequest((event) -> {
+                event.consume();
+            });
+            stage.setFullScreen(true);
+            stage.setFullScreenExitKeyCombination(KeyCombination.NO_MATCH);
+            stage.setFullScreenExitHint("");
+            stage.setResizable(false);
+            stage.setAlwaysOnTop(true);
+        }
         conexion();
         stage.show();
 //        documentController.ListFilesInDir(new File("C:\\"));
     }
+
+    public static int getPrecioColor() {
+        return userPreferences.getInt("precioColor", 2);
+    }
+
+    public static int getPrecioBlancoNegro() {
+        return userPreferences.getInt("precioBlancoNegro", 1);
+    }
+
+    public static int getPrecioScan() {
+        return userPreferences.getInt("precioScan", 3);
+    }
+
+    public static boolean getFullScreen() {
+        return userPreferences.getBoolean("fullScreen", false);
+    }
+
+    public static void setPrecioColor(int precioColor) {
+        userPreferences.putInt("precioColor", precioColor);
+        JavaFXApplication3.precioColor = precioColor;
+    }
+
+    public static void setPrecioBlancoNegro(int precioBlancoNegro) {
+        userPreferences.putInt("precioBlancoNegro", precioBlancoNegro);
+        JavaFXApplication3.precioBlancoNegro = precioBlancoNegro;
+    }
+
+    public static void setPrecioScan(int precioScan) {
+        userPreferences.putInt("precioScan", precioScan);
+        JavaFXApplication3.precioScan = precioScan;
+    }
+
+    public static void setFullScreen(boolean fullScreen) {
+        userPreferences.putBoolean("fullScreen", fullScreen);
+    }
+
+    public static void setRectangleX(double x) {
+        userPreferences.putDouble("rectangleX", x);
+    }
+
+    public static void setRectangleY(double y) {
+        userPreferences.putDouble("rectangleY", y);
+    }
+
+    public static void setRectangleWidth(double width) {
+        userPreferences.putDouble("rectangleWidth", width);
+    }
+
+    public static void setRectangleHeight(double height) {
+        userPreferences.putDouble("rectangleHeight", height);
+    }
+
+    public static double getRectangleX() {
+        return userPreferences.getDouble("rectangleX", 0);
+    }
+
+    public static double getRectangleY() {
+        return userPreferences.getDouble("rectangleY", 0);
+    }
+
+    public static double getRectangleWidth() {
+        return userPreferences.getDouble("rectangleWidth", 0);
+    }
+
+    public static double getRectangleHeight() {
+        return userPreferences.getDouble("rectangleHeight", 0);
+    }
+
+    public static String getPasswordRed() {
+        return userPreferences.get("passwordRed", "");
+    }
+
+    public static void setPasswordRed(String password) {
+        userPreferences.put("passwordRed", password);
+    }
+
+    public static String getNombreRed() {
+        return userPreferences.get("nombreRed", "");
+    }
+
+    public static void setNombreRed(String nombre) {
+        userPreferences.put("nombreRed", nombre);
+    }
+
+    public static String getPassword() {
+        return userPreferences.get("password", "12345");
+    }
+
+    public static void setPassword(String password) {
+        userPreferences.put("password", password);
+    }
+
+    public static void setImageX(double x) {
+        userPreferences.putDouble("imageX", x);
+    }
+
+    public static void setImageY(double y) {
+        userPreferences.putDouble("imageY", y);
+    }
+
+    public static void setImageWidth(double width) {
+        userPreferences.putDouble("imageWidth", width);
+    }
+
+    public static void setImageHeight(double height) {
+        userPreferences.putDouble("imageHeight", height);
+    }
+
+    public static double getImageX() {
+        return userPreferences.getDouble("imageX", 0);
+    }
+
+    public static double getImageY() {
+        return userPreferences.getDouble("imageY", 0);
+    }
+
+    public static double getImageWidth() {
+        return userPreferences.getDouble("imageWidth", -1);
+    }
+
+    public static double getImageHeight() {
+        return userPreferences.getDouble("imageHeight", -1);
+    }
+
+    public static USBDeviceDetectorManager driveDetector = new USBDeviceDetectorManager();
+    public static IUSBDriveListener listener;
+
+    @Override
+    public void stop() {
+        Spark.stop();
+        if (port != null && port.isOpen()) {
+            port.closePort();
+            port.removeDataListener();
+        }
+        try {
+            if (driveDetector != null) {
+                if (listener != null) {
+                    driveDetector.removeDriveListener(listener);
+                }
+
+                driveDetector.close();
+            }
+
+        } catch (IOException ex) {
+            Logger.getLogger(JavaFXApplication3.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void getIp() {
+        try {
+            Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
+            while (networkInterfaces.hasMoreElements()) {
+                NetworkInterface networkInterface = networkInterfaces.nextElement();
+
+                // Check if the interface is up and not a loopback interface
+                if (networkInterface.isUp() && !networkInterface.isLoopback() && !networkInterface.isVirtual()) {
+                    Enumeration<InetAddress> inetAddresses = networkInterface.getInetAddresses();
+                    if (inetAddresses.hasMoreElements()) {
+                        InetAddress inetAddress = inetAddresses.nextElement();
+                        // Filter for IPv4 addresses and exclude link-local addresses
+                        if (inetAddress.getHostAddress().matches("\\d+\\.\\d+\\.\\d+\\.\\d+")
+                                && !inetAddress.isLinkLocalAddress()) {
+                            webAppAdress = "http://" + inetAddress.getHostAddress() + ":5088/upload.html";
+                        }
+                    }
+                }
+            }
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
+    }
+
     private int productID = 29987;
     private int vendorID = 6790;
     private static SerialPort port;
@@ -101,12 +316,15 @@ public class JavaFXApplication3 extends Application {
     }
 
     public static void darCambio(byte cambio) {
+        if (port == null) {
+            return;
+        }
         byte cantidad = (byte) (cambio + 1);
         port.writeBytes(new byte[]{58, 77, 50, cantidad, 13}, 5);
     }
-    
-    public static void setCredito(int credit){
-          Platform.runLater(() -> {
+
+    public static void setCredito(int credit) {
+        Platform.runLater(() -> {
             credito.set(credit);
         });
         /**
@@ -115,10 +333,14 @@ public class JavaFXApplication3 extends Application {
          * escribirá en la pantalla LCD expresada en hexadecimal, variable
          * nuevoCredito 0D = Byte de final de cadena, 13 en byte
          */
-        port.writeBytes(new byte[]{58, 77, 51, (byte)credit, 13}, 5);
+        if (port == null) {
+            return;
+        }
+        port.writeBytes(new byte[]{58, 77, 51, (byte) credit, 13}, 5);
     }
 
     private void aumentarCredio(int valor) {
+
         byte nuevoCredito = (byte) (credito.get() + valor);
         Platform.runLater(() -> {
             credito.set(credito.get() + valor);
@@ -129,6 +351,9 @@ public class JavaFXApplication3 extends Application {
          * escribirá en la pantalla LCD expresada en hexadecimal, variable
          * nuevoCredito 0D = Byte de final de cadena, 13 en byte
          */
+        if (port == null) {
+            return;
+        }
         port.writeBytes(new byte[]{58, 77, 51, nuevoCredito, 13}, 5);
 
     }

@@ -50,7 +50,6 @@ public class LoadPdfTask extends Task<ObservableList<VBox>> {
             iv.setMouseTransparent(true);
             iv.fitHeightProperty().bind(windowHeight);
             VBox vbox = new VBox();
-            final int index = i;
             
             vbox.setStyle("-fx-background-color: white");
             //Instantiating the Shadow class 
