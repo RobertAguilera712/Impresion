@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXToggleButton?>
 <?import de.jensd.fx.glyphs.materialdesignicons.MaterialDesignIconView?>
 <?import io.github.palexdev.materialfx.controls.MFXButton?>
 <?import io.github.palexdev.materialfx.controls.MFXScrollPane?>
@@ -7,9 +8,10 @@
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.*?>
-
-<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
 
 <Pane
         fx:id="pane"
@@ -20,12 +22,22 @@
         fx:controller="javafxapplication3.FXMLDocumentController">
     <children>
 
-        <MFXButton
-                fx:id="ScanBtn"
+        <HBox
                 layoutX="15.0"
                 layoutY="11.0"
-                buttonType="RAISED"
-                text="Escanear" />
+                spacing="20.0">
+            <children>
+                <MFXButton
+                        fx:id="ScanBtn"
+                        buttonType="RAISED"
+                        text="Escanear" />
+                <MFXButton
+                        fx:id="CopyBtn"
+                        buttonType="RAISED"
+                        text="Copiar" />
+            </children>
+        </HBox>
+
 
         <Group
                 fx:id="filesGroup"
@@ -84,27 +96,48 @@
         </Group>
         <VBox
                 fx:id="emptyVbox"
+                alignment="CENTER"
                 layoutX="${(pane.width - emptyVbox.width) / 2}"
-                layoutY="${(pane.height - emptyVbox.height) / 2}"
-                alignment="CENTER">
+                layoutY="${(pane.height - emptyVbox.height) / 2}">
             <Label
                     styleClass="h1"
                     text="Conecta una USB" />
             <Label
                     styleClass="h3"
-                    text="O transfiere tus archivos" />
-            <HBox>
+                    text="O conéctate a la red y transfiere tus archivos" />
+
+            <VBox
+                    alignment="CENTER"
+                    spacing="10.0">
                 <children>
-                    <ImageView
-                            fx:id="redQrImage"
-                            fitWidth="200.0"
-                            fitHeight="200.0" />
-                    <ImageView
-                            fx:id="qrImage"
-                            fitWidth="200.0"
-                            fitHeight="200.0" />
+                    <Pane
+                            maxHeight="-Infinity"
+                            maxWidth="-Infinity"
+                            minHeight="-Infinity"
+                            minWidth="-Infinity"
+                            prefHeight="200"
+                            prefWidth="200">
+                        <ImageView
+                                fx:id="redQrImage"
+                                fitHeight="200.0"
+                                fitWidth="200.0"
+                                layoutX="0"
+                                layoutY="0" />
+                        <ImageView
+                                fx:id="qrImage"
+                                fitHeight="200.0"
+                                fitWidth="200.0"
+                                layoutX="0"
+                                layoutY="0" />
+                    </Pane>
+                    <JFXToggleButton
+                            fx:id="conectadoToggle"
+                            text="Estoy conectado"
+                            toggleColor="#65008f"
+                            toggleLineColor="#ac78c2" />
+
                 </children>
-            </HBox>
+            </VBox>
 
 
         </VBox>

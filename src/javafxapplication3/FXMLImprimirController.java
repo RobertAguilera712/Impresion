@@ -110,12 +110,12 @@ public class FXMLImprimirController implements Initializable {
     private Label cambioLabel;
     @FXML
     private Label precioLabel;
-    
+
     private IntegerProperty precioProperty = new SimpleIntegerProperty(JavaFXApplication3.precioBlancoNegro);
     private IntegerProperty totalProperty = new SimpleIntegerProperty();
     private IntegerProperty faltanteProperty = new SimpleIntegerProperty();
     private IntegerProperty cambioProperty = new SimpleIntegerProperty();
-    
+
     private IntegerProperty paginasProperty = new SimpleIntegerProperty(0);
     private IntegerProperty allPaginasProperty = new SimpleIntegerProperty(0);
     private IntegerProperty paginasRangeProperty = new SimpleIntegerProperty(0);
@@ -135,6 +135,25 @@ public class FXMLImprimirController implements Initializable {
     private VBox optionsVbox;
     @FXML
     private VBox infoVbox;
+
+    private boolean isCopiado;
+
+    public void setCopiado() {
+        isCopiado = true;
+        precioProperty.set(JavaFXApplication3.precioCopia);
+    }
+
+    public void closeDocument() {
+        try {
+            if (document == null) {
+                return;
+            }
+            document.close();
+        } catch (IOException ex) {
+            Logger.getLogger(FXMLImprimirController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -184,7 +203,7 @@ public class FXMLImprimirController implements Initializable {
         totalLabel.getStyleClass().add("h3");
         faltanteLabel.getStyleClass().add("h3");
         cambioLabel.getStyleClass().add("h3");
-        
+
         pagsLabel.getStyleClass().add("h3");
         copiasTotalLabel.getStyleClass().add("h3");
 
@@ -196,7 +215,7 @@ public class FXMLImprimirController implements Initializable {
         totalLabel.textProperty().bind(totalProperty.asString("Total: $%d"));
         faltanteLabel.textProperty().bind(faltanteProperty.asString("Faltante: $%d"));
         cambioLabel.textProperty().bind(cambioProperty.asString("Cambio: $%d"));
-        
+
         pagsLabel.textProperty().bind(paginasProperty.asString("Páginas a imprimir: %d"));
         copiasTotalLabel.textProperty().bind(copias.multiply(paginasProperty).asString("Totoal de copias a imprir: %d"));
 
@@ -204,9 +223,21 @@ public class FXMLImprimirController implements Initializable {
 
         colorCombo.valueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(colorOpts[0])) {
-                precioProperty.set(JavaFXApplication3.precioBlancoNegro);
+                if (isCopiado) {
+                    precioProperty.set(JavaFXApplication3.precioCopia);
+
+                } else {
+                    precioProperty.set(JavaFXApplication3.precioBlancoNegro);
+
+                }
             } else if (newValue.equals(colorOpts[1])) {
-                precioProperty.set(JavaFXApplication3.precioColor);
+                if (isCopiado) {
+                    precioProperty.set(JavaFXApplication3.precioCopiaColor);
+
+                } else {
+                    precioProperty.set(JavaFXApplication3.precioColor);
+
+                }
             }
         });
         InicioRangoProperty.bind(inicioCombo.valueProperty());
@@ -311,7 +342,7 @@ public class FXMLImprimirController implements Initializable {
                 return null;
             }
         };
-        
+
         WaitAlert waitAlert = new WaitAlert(AlertIcon.WARNING, JavaFXApplication3.currentStage);
         waitAlert.setTitle("Imprimiendo documento");
         waitAlert.setTextContent("Tu documento se está imprimiendo. Espera un momento");
@@ -319,30 +350,36 @@ public class FXMLImprimirController implements Initializable {
         printTask.setOnSucceeded(event -> {
             System.out.println("Printing completed.");
             waitAlert.Close();
-            ConfirmationAlert alert = new ConfirmationAlert(AlertIcon.QUESTION, JavaFXApplication3.currentStage);
-            alert.setTitle("¿Seguir imprimiendo?");
-            alert.setTextContent("¿Quieres continuar imprimiendo?");
-            alert.setConfirmationButtonText("Si");
-            alert.setConfirmationButtonAction((e) -> {
-                int nuevoCredito = JavaFXApplication3.credito.get() - totalProperty.get();
-                JavaFXApplication3.credito.set(nuevoCredito);
-            });
-            alert.setCancellationButtonText("No");
-            alert.setCancellationButtonAction((e) -> {
+            if (!isCopiado) {
+                ConfirmationAlert alert = new ConfirmationAlert(AlertIcon.QUESTION, JavaFXApplication3.currentStage);
+                alert.setTitle("¿Seguir imprimiendo?");
+                alert.setTextContent("¿Quieres continuar imprimiendo?");
+                alert.setConfirmationButtonText("Si");
+                alert.setConfirmationButtonAction((e) -> {
+                    int nuevoCredito = JavaFXApplication3.credito.get() - totalProperty.get();
+                    JavaFXApplication3.credito.set(nuevoCredito);
+                });
+                alert.setCancellationButtonText("No");
+                alert.setCancellationButtonAction((e) -> {
+                    JavaFXApplication3.darCambio((byte) cambioProperty.get());
+                    JavaFXApplication3.credito.set(0);
+                    mostrarPantallaPrincipal();
+                    cancelarBtn.fire();
+                });
+                alert.showAndWait();
+            } else {
                 JavaFXApplication3.darCambio((byte) cambioProperty.get());
                 JavaFXApplication3.credito.set(0);
                 mostrarPantallaPrincipal();
                 cancelarBtn.fire();
-            });
-            alert.showAndWait();
+            }
+
             // Perform additional actions after printing completes
         });
-        
+
         waitAlert.Show();
 
         new Thread(printTask).start();
-        
-        
 
     }
 

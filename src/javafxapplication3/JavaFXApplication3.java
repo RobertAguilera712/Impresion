@@ -41,6 +41,8 @@ public class JavaFXApplication3 extends Application {
     public static int precioBlancoNegro;
     public static int precioColor;
     public static int precioScan;
+    public static int precioCopia;
+    public static int precioCopiaColor;
 
     public static String webAppAdress;
 
@@ -54,13 +56,13 @@ public class JavaFXApplication3 extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        
-      
 
         userPreferences = Preferences.userRoot().node(this.getClass().getName());
         precioBlancoNegro = getPrecioBlancoNegro();
         precioColor = getPrecioColor();
         precioScan = getPrecioScan();
+        precioCopia = getPrecioCopia();
+        precioCopiaColor = getPrecioCopiaColor();
 
         getIp();
         currentStage = stage;
@@ -73,11 +75,11 @@ public class JavaFXApplication3 extends Application {
         scene.getStylesheets().add(css);
 
         // DELETE
-        scene.setOnKeyPressed((event) -> {
-            if (event.getCode() == KeyCode.C) {
-                credito.set(credito.get() + 1);
-            }
-        });
+//        scene.setOnKeyPressed((event) -> {
+//            if (event.getCode() == KeyCode.C) {
+//                credito.set(credito.get() + 1);
+//            }
+//        });
 
         app = new WebApp();
         app.initApp();
@@ -111,6 +113,14 @@ public class JavaFXApplication3 extends Application {
         return userPreferences.getInt("precioScan", 3);
     }
 
+    public static int getPrecioCopia() {
+        return userPreferences.getInt("precioCopia", 1);
+    }
+
+    public static int getPrecioCopiaColor() {
+        return userPreferences.getInt("precioCopiaColor", 2);
+    }
+
     public static boolean getFullScreen() {
         return userPreferences.getBoolean("fullScreen", false);
     }
@@ -128,6 +138,16 @@ public class JavaFXApplication3 extends Application {
     public static void setPrecioScan(int precioScan) {
         userPreferences.putInt("precioScan", precioScan);
         JavaFXApplication3.precioScan = precioScan;
+    }
+
+    public static void setPrecioCopia(int precioCopia) {
+        userPreferences.putInt("precioCopia", precioCopia);
+        JavaFXApplication3.precioCopia = precioCopia;
+    }
+
+    public static void setPrecioCopiaColor(int precioCopiaColor) {
+        userPreferences.putInt("precioCopiaColor", precioCopiaColor);
+        JavaFXApplication3.precioCopiaColor = precioCopiaColor;
     }
 
     public static void setFullScreen(boolean fullScreen) {

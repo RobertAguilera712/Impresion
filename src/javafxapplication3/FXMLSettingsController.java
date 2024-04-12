@@ -88,6 +88,8 @@ public class FXMLSettingsController implements Initializable {
     private IntegerProperty precioBnProperty;
     private IntegerProperty precioColorProperty;
     private IntegerProperty precioScanProperty;
+    private IntegerProperty precioCopiaProperty;
+    private IntegerProperty precioCopiaColorProperty;
 
     @FXML
     private Pane pane;
@@ -114,7 +116,6 @@ public class FXMLSettingsController implements Initializable {
         passwordField.setText(password);
         redTextField.setText(nombreRed);
         redPasswordField.setText(redPassword);
-        
 
         btnAtras.setOnAction((event) -> {
             try {
@@ -140,10 +141,14 @@ public class FXMLSettingsController implements Initializable {
         precioBnProperty = new SimpleIntegerProperty(JavaFXApplication3.getPrecioBlancoNegro());
         precioColorProperty = new SimpleIntegerProperty(JavaFXApplication3.getPrecioColor());
         precioScanProperty = new SimpleIntegerProperty(JavaFXApplication3.getPrecioScan());
+        precioCopiaProperty = new SimpleIntegerProperty(JavaFXApplication3.getPrecioCopia());
+        precioCopiaColorProperty = new SimpleIntegerProperty(JavaFXApplication3.getPrecioCopiaColor());
 
         precioBnLabel.textProperty().bind(precioBnProperty.asString("$%d"));
         precioColorLabel.textProperty().bind(precioColorProperty.asString("$%d"));
         precioEscaneoLabel.textProperty().bind(precioScanProperty.asString("$%d"));
+        precioCopiaBnLabel.textProperty().bind(precioCopiaProperty.asString("$%d"));
+        precioCopiaColorLabel.textProperty().bind(precioCopiaColorProperty.asString("$%d"));
 
         plusBnBtn.setOnAction((event) -> {
             precioBnProperty.set(precioBnProperty.add(1).get());
@@ -175,6 +180,26 @@ public class FXMLSettingsController implements Initializable {
             }
         });
 
+        plusCopiaBnBtn.setOnAction((event) -> {
+            precioCopiaProperty.set(precioCopiaProperty.add(1).get());
+        });
+
+        lessCopiaBnBtn.setOnAction((event) -> {
+            if (precioCopiaProperty.get() > 1) {
+                precioCopiaProperty.set(precioCopiaProperty.subtract(1).get());
+            }
+        });
+
+        plusCopiaColorBtn.setOnAction((event) -> {
+            precioCopiaColorProperty.set(precioCopiaColorProperty.add(1).get());
+        });
+
+        lessCopiaColorBtn.setOnAction((event) -> {
+            if (precioCopiaColorProperty.get() > 1) {
+                precioCopiaColorProperty.set(precioCopiaColorProperty.subtract(1).get());
+            }
+        });
+
         guardarBtn.setOnAction((event) -> {
             if (passwordField.getText().length() <= 0) {
                 OkAlert alert = new OkAlert(AlertIcon.ERROR, JavaFXApplication3.currentStage);
@@ -202,13 +227,15 @@ public class FXMLSettingsController implements Initializable {
 
             String newPassword = passwordField.getText();
             JavaFXApplication3.setPassword(newPassword);
-            
+
             JavaFXApplication3.setNombreRed(redTextField.getText());
             JavaFXApplication3.setPasswordRed(redPasswordField.getText());
 
             JavaFXApplication3.setPrecioColor(precioColorProperty.get());
             JavaFXApplication3.setPrecioBlancoNegro(precioBnProperty.get());
             JavaFXApplication3.setPrecioScan(precioScanProperty.get());
+            JavaFXApplication3.setPrecioCopia(precioCopiaProperty.get());
+            JavaFXApplication3.setPrecioCopiaColor(precioCopiaColorProperty.get());
 
             boolean fullScreen = pantallaCombo.getValue().equals(pantallaOpts[0]);
             JavaFXApplication3.setFullScreen(fullScreen);

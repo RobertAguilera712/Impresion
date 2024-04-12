@@ -6,6 +6,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import com.jfoenix.controls.JFXToggleButton;
 import io.github.palexdev.materialfx.controls.MFXButton;
 import io.github.palexdev.materialfx.controls.MFXProgressBar;
 import io.github.palexdev.materialfx.controls.MFXScrollPane;
@@ -155,6 +156,10 @@ public class FXMLDocumentController implements Initializable {
     private MFXButton ScanBtn;
     @FXML
     private ImageView redQrImage;
+    @FXML
+    private MFXButton CopyBtn;
+    @FXML
+    private JFXToggleButton conectadoToggle;
 
 //    private static void fireFileCreatedEvent(Path createdFilePath) {
 //        // Here, you can implement your own logic to handle the file creation event
@@ -188,6 +193,9 @@ public class FXMLDocumentController implements Initializable {
     @Override
 
     public void initialize(URL url, ResourceBundle rb) {
+        qrImage.visibleProperty().bind(conectadoToggle.selectedProperty());
+        redQrImage.visibleProperty().bind(conectadoToggle.selectedProperty().not());
+        
         Path directoryToWatch = Paths.get("uploads");
         // Create a new thread for handling events
         Thread eventHandlerThread = new Thread(() -> {
@@ -268,6 +276,19 @@ public class FXMLDocumentController implements Initializable {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLScanner.fxml"));
                 Parent root = loader.load();
+                Stage stage = JavaFXApplication3.currentStage;
+                stage.getScene().setRoot(root);
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+        CopyBtn.setOnAction((event) -> {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLScanner.fxml"));
+                Parent root = loader.load();
+                FXMLScannerController controller = loader.getController();
+                controller.setCopiado();
                 Stage stage = JavaFXApplication3.currentStage;
                 stage.getScene().setRoot(root);
             } catch (IOException ex) {

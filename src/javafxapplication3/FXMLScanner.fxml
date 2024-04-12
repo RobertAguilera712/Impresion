@@ -111,6 +111,11 @@
                     fx:id="saveBtn"
                     buttonType="RAISED"
                     text="Guardar" />
+             <MFXButton
+                    fx:id="copyBtn"
+                    buttonType="RAISED"
+                    visible="false"
+                    text="Copiar" />
         </HBox>
 
 

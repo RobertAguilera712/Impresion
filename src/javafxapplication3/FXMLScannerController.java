@@ -149,6 +149,53 @@ public class FXMLScannerController implements Initializable {
         }
 
     };
+    @FXML
+    private MFXButton copyBtn;
+
+    public void setCopiado() {
+        infoVbox.setVisible(false);
+        saveBtn.setVisible(false);
+        errorLabel.visibleProperty().unbind();
+        errorLabel.setVisible(false);
+        titleLabel.setText("Copiar documento");
+        copyBtn.setVisible(true);
+
+        copyBtn.setOnAction((event) -> {
+
+            try {
+
+                // Save file which is going to be copied
+                File staticFilesFolder = new File(System.getProperty("user.dir") + "/src/webapp/static/pdf");
+                File file = new File(staticFilesFolder.getAbsolutePath(), "copy.pdf");
+                try {
+                    FileUtils.cleanDirectory(staticFilesFolder);
+                } catch (IOException ex) {
+                    Logger.getLogger(FXMLScannerController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                document.save(file);
+//                document.close();
+
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLImprimir.fxml"));
+                Parent root = loader.load();
+                FXMLImprimirController imprimirController = loader.getController();
+                JFXAlert<Void> alertImprimir = new JFXAlert<>(JavaFXApplication3.currentStage);
+                imprimirController.setPdf(file);
+                imprimirController.setCopiado();
+                imprimirController.setCancelar((eventt) -> {
+                    imprimirController.closeDocument();
+                    alertImprimir.close();
+                });
+                alertImprimir.setOverlayClose(false);
+                alertImprimir.setContent(root);
+                alertImprimir.show();
+
+            } catch (IOException ex) {
+                Logger.getLogger(FXMLPdfViewverController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        });
+
+    }
 
     /**
      * Initializes the controller class.
@@ -164,6 +211,9 @@ public class FXMLScannerController implements Initializable {
             try {
                 JavaFXApplication3.listener = null;
                 JavaFXApplication3.driveDetector.removeDriveListener(listener);
+                if (document != null){
+                    document.close();
+                }
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("FXMLDocument.fxml"));
                 Parent root = loader.load();
@@ -407,7 +457,7 @@ public class FXMLScannerController implements Initializable {
 
         try {
             document.save(file);
-            document.close();
+//            document.close();
             String pdfPath = JavaFXApplication3.webAppAdress.replaceFirst("upload.html", "newestpdf");
             System.out.println(pdfPath);
             File qrStream = QRCode.from(pdfPath).withSize(200, 200).file();
